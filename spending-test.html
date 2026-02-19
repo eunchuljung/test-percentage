@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>너 충동소비 지수 몇 %?</title>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="너 충동소비 지수 몇 %?">
+    <meta property="og:description" content="카드 긁을 때 이성 잃는 정도 측정">
+    <meta property="og:image" content="https://via.placeholder.com/800x400?text=충동소비+지수+테스트">
+    <meta property="og:url" content="">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { width: 100%; max-width: 500px; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .start-screen { padding: 60px 40px; text-align: center; }
+        .start-screen h1 { font-size: 28px; color: #333; margin-bottom: 20px; line-height: 1.4; }
+        .start-screen p { font-size: 16px; color: #666; margin-bottom: 40px; line-height: 1.6; }
+        .participant-count { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 30px; font-size: 14px; color: #666; }
+        .participant-count strong { font-size: 24px; color: #fa709a; font-weight: bold; }
+        .start-btn { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; border: none; padding: 18px 60px; font-size: 18px; border-radius: 50px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .start-btn:hover { transform: scale(1.05); }
+        .question-screen { display: none; padding: 40px; }
+        .progress-bar { height: 8px; background: #f0f0f0; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #fa709a 0%, #fee140 100%); width: 0%; transition: width 0.3s; }
+        .question-number { font-size: 14px; color: #999; margin-bottom: 10px; }
+        .question-text { font-size: 22px; color: #333; margin-bottom: 40px; line-height: 1.5; font-weight: bold; }
+        .answer-btn { width: 100%; background: white; border: 2px solid #e0e0e0; padding: 20px; margin-bottom: 15px; border-radius: 15px; font-size: 16px; cursor: pointer; transition: all 0.2s; text-align: left; line-height: 1.5; }
+        .answer-btn:hover { border-color: #fa709a; background: #fff5f7; transform: translateY(-2px); }
+        .result-screen { display: none; padding: 40px; }
+        .result-card { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 40px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        .result-percentage { font-size: 72px; color: white; font-weight: bold; margin-bottom: 10px; }
+        .result-title { font-size: 24px; color: white; font-weight: bold; margin-bottom: 10px; }
+        .result-summary { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
+        .result-message { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; color: white; line-height: 1.6; font-size: 15px; }
+        .ad-banner { background: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 10px; border: 2px dashed #e0e0e0; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #999; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .action-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .save-btn { background: #4CAF50; color: white; }
+        .share-btn { background: #FEE500; color: #3c1e1e; }
+        .action-btn:hover { transform: scale(1.05); }
+        .other-tests { background: #f8f9fa; padding: 30px; border-radius: 15px; }
+        .other-tests h3 { font-size: 18px; margin-bottom: 20px; color: #333; }
+        .test-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: transform 0.2s; border: 2px solid #e0e0e0; }
+        .test-item:hover { transform: translateX(5px); border-color: #fa709a; }
+        .test-item-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .test-item-desc { font-size: 14px; color: #666; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <h1>너 충동소비 지수 몇 %?</h1>
+            <p>카드 긁을 때 이성 잃는 정도 측정</p>
+            <div class="participant-count">지금까지 <strong id="participantCount">0</strong>명이 참여했어요</div>
+            <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="question-number" id="questionNumber">질문 1/10</div>
+            <div class="question-text" id="questionText"></div>
+            <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
+            <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
+        </div>
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card" id="resultCard">
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+            <div class="ad-banner">광고 배너 영역</div>
+            <div class="action-buttons">
+                <button class="action-btn save-btn" onclick="saveAsImage()">이미지 저장</button>
+                <button class="action-btn share-btn" onclick="shareKakao()">카톡 공유</button>
+            </div>
+            <div class="other-tests">
+                <h3>다른 테스트도 해볼래?</h3>
+                <div class="test-item" onclick="location.href='love-test.html'">
+                    <div class="test-item-title">너 연애에서 호구력 몇 %?</div>
+                    <div class="test-item-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
+                </div>
+                <div class="test-item" onclick="location.href='work-test.html'">
+                    <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
+                    <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
+                </div>
+                <div class="test-item" onclick="location.href='sns-test.html'">
+                    <div class="test-item-title">너 SNS 중독 위험도 몇 %?</div>
+                    <div class="test-item-desc">폰 없으면 불안해지는 정도 측정</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const testData = {
+            questions: [
+                { question: "배달앱 들어갔을 때", answers: { A: "뭐 먹을지 정해두고 주문만 함", B: "이것저것 구경하다가 추가 주문" }},
+                { question: "\"1+1\" \"50% 할인\" 보면", answers: { A: "필요한 거면 삼, 아니면 패스", B: "일단 이득인 것 같아서 구매" }},
+                { question: "쇼핑몰에서 \"장바구니에만 담아둠\" 비율은?", answers: { A: "80% 이상 (구경만 하고 안 삼)", B: "거의 다 결제함" }},
+                { question: "\"무료배송 N원 남음\" 문구 보면", answers: { A: "필요 없으면 그냥 배송비 냄", B: "뭐라도 더 담아서 무료배송 맞춤" }},
+                { question: "월급 들어온 날 행동은?", answers: { A: "고정 지출 빼고 저축", B: "갖고 싶었던 거 바로 구매" }},
+                { question: "친구가 \"이거 샀어~\" 자랑할 때", answers: { A: "오 좋겠다~ (부러운 정도만)", B: "어디서 샀어? 나도 살까? (검색 시작)" }},
+                { question: "새벽 2시 침대에서 쇼핑몰 보다가", answers: { A: "내일 다시 생각해보고 결정", B: "지금 안 사면 품절될 것 같아서 결제" }},
+                { question: "리뷰 보고 충동 구매한 적은?", answers: { A: "거의 없음", B: "한 달에 1번 이상" }},
+                { question: "\"오늘만 특가\" \"타임세일\" 보면", answers: { A: "마케팅이네 (무시)", B: "지금 안 사면 손해 (급하게 결제)" }},
+                { question: "이번 달 카드값 확인했을 때 반응은?", answers: { A: "예상 범위 내", B: "어? 이렇게나...? (충격)" }}
+            ],
+            results: [
+                { range: [0, 20], title: "소비 철인", summary: "충동소비 거의 안 함", message: "넌 계획적이고 이성적으로 돈 쓰는 타입. 필요한 것만 사고, 할인에도 안 흔들리고, 충동 구매 거의 안 함. 이 정도면 재테크 잘하고 있을 듯. 근데 가끔은 하고 싶은 거 하면서 사는 것도 나쁘지 않음 ㅋㅋ" },
+                { range: [21, 40], title: "적당히 절제하는 편", summary: "충동소비 낮음", message: "기본적으론 계획적으로 쓰지만, 가끔 하고 싶은 거 있으면 사는 스타일. 완벽하게 절제하진 않지만 큰 낭비는 안 하는 편. 이 정도면 건강한 소비 습관 유지하고 있음. 밸런스 괜찮음." },
+                { range: [41, 60], title: "가끔 이성 잃음", summary: "충동소비 중간", message: "계획은 있는데 지키기 어려운 타입. 할인, 이벤트, 리뷰에 은근 흔들리고, 카드값 나왔을 때 \"어?\" 하는 순간이 있음. 완전히 문제는 아니지만 조금만 더 신경 쓰면 저축 늘릴 수 있음." },
+                { range: [61, 80], title: "카드 긁는 머신", summary: "충동소비 높음", message: "솔직히 말하면 충동 구매 꽤 많이 하는 편임. 보면 사고 싶고, 할인하면 일단 사고, 새벽에 쇼핑몰 보다가 결제 누름. 이대로 가면 통장 잔고 위험할 수 있으니 소비 패턴 점검 필요함." },
+                { range: [81, 100], title: "찐 충동소비러", summary: "충동소비 최상위권", message: "거의 확정으로 카드값 폭탄 맞는 중 ㅋㅋㅋ 사고 싶으면 바로 사고, 할인 보면 무조건 사고, 계획 같은 거 없음. 이 정도면 진짜 빚 조심해야 함. 지갑 좀 닫고 통장부터 확인해봐." }
+            ]
+        };
+        let currentQuestion = 0, score = 0;
+        window.addEventListener('DOMContentLoaded', function() {
+            const countUp = new CountUp('participantCount', 22145 + Math.floor(Math.random() * 100), { duration: 2, separator: ',' });
+            countUp.start();
+        });
+        function startTest() { document.getElementById('startScreen').classList.add('hidden'); document.getElementById('questionScreen').classList.remove('hidden'); showQuestion(0); }
+        function showQuestion(index) {
+            const q = testData.questions[index];
+            document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('answerA').textContent = q.answers.A;
+            document.getElementById('answerB').textContent = q.answers.B;
+            document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
+        }
+        function selectAnswer(answer) { if (answer === 'B') score += 10; currentQuestion++; currentQuestion < testData.questions.length ? showQuestion(currentQuestion) : showResult(); }
+        function showResult() {
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+            const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            document.getElementById('resultPercentage').textContent = score + '%';
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultSummary').textContent = result.summary;
+            document.getElementById('resultMessage').textContent = result.message;
+        }
+        function saveAsImage() { html2canvas(document.getElementById('resultCard'), { scale: 2, backgroundColor: null }).then(canvas => { const link = document.createElement('a'); link.download = '충동소비_지수_결과.png'; link.href = canvas.toDataURL(); link.click(); }); }
+        function shareKakao() { alert('카카오톡 공유 기능은 카카오 개발자 등록 후 사용 가능합니다.\n지금은 URL 복사로 대체됩니다.'); navigator.clipboard.writeText(window.location.href).then(() => alert('URL이 복사되었습니다!')); }
+    </script>
+</body>
+</html>
