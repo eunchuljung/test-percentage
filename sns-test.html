@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>너 SNS 중독 위험도 몇 %?</title>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="너 SNS 중독 위험도 몇 %?">
+    <meta property="og:description" content="폰 없으면 불안해지는 정도 측정">
+    <meta property="og:image" content="https://via.placeholder.com/800x400?text=SNS+중독+테스트">
+    <meta property="og:url" content="">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { width: 100%; max-width: 500px; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .start-screen { padding: 60px 40px; text-align: center; }
+        .start-screen h1 { font-size: 28px; color: #333; margin-bottom: 20px; line-height: 1.4; }
+        .start-screen p { font-size: 16px; color: #666; margin-bottom: 40px; line-height: 1.6; }
+        .participant-count { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 30px; font-size: 14px; color: #666; }
+        .participant-count strong { font-size: 24px; color: #6dd5ed; font-weight: bold; }
+        .start-btn { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white; border: none; padding: 18px 60px; font-size: 18px; border-radius: 50px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .start-btn:hover { transform: scale(1.05); }
+        .question-screen { display: none; padding: 40px; }
+        .progress-bar { height: 8px; background: #f0f0f0; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); width: 0%; transition: width 0.3s; }
+        .question-number { font-size: 14px; color: #999; margin-bottom: 10px; }
+        .question-text { font-size: 22px; color: #333; margin-bottom: 40px; line-height: 1.5; font-weight: bold; }
+        .answer-btn { width: 100%; background: white; border: 2px solid #e0e0e0; padding: 20px; margin-bottom: 15px; border-radius: 15px; font-size: 16px; cursor: pointer; transition: all 0.2s; text-align: left; line-height: 1.5; }
+        .answer-btn:hover { border-color: #6dd5ed; background: #f0fbff; transform: translateY(-2px); }
+        .result-screen { display: none; padding: 40px; }
+        .result-card { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 40px; border-radius: 20px; text-align: center; margin-bottom: 20px; }
+        .result-percentage { font-size: 72px; color: white; font-weight: bold; margin-bottom: 10px; }
+        .result-title { font-size: 24px; color: white; font-weight: bold; margin-bottom: 10px; }
+        .result-summary { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
+        .result-message { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; color: white; line-height: 1.6; font-size: 15px; }
+        .ad-banner { background: #f8f9fa; padding: 20px; text-align: center; margin: 20px 0; border-radius: 10px; border: 2px dashed #e0e0e0; min-height: 100px; display: flex; align-items: center; justify-content: center; color: #999; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .action-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .save-btn { background: #4CAF50; color: white; }
+        .share-btn { background: #FEE500; color: #3c1e1e; }
+        .action-btn:hover { transform: scale(1.05); }
+        .other-tests { background: #f8f9fa; padding: 30px; border-radius: 15px; }
+        .other-tests h3 { font-size: 18px; margin-bottom: 20px; color: #333; }
+        .test-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: transform 0.2s; border: 2px solid #e0e0e0; }
+        .test-item:hover { transform: translateX(5px); border-color: #6dd5ed; }
+        .test-item-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .test-item-desc { font-size: 14px; color: #666; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <h1>너 SNS 중독 위험도 몇 %?</h1>
+            <p>폰 없으면 불안해지는 정도 측정</p>
+            <div class="participant-count">지금까지 <strong id="participantCount">0</strong>명이 참여했어요</div>
+            <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="question-number" id="questionNumber">질문 1/10</div>
+            <div class="question-text" id="questionText"></div>
+            <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
+            <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
+        </div>
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card" id="resultCard">
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+            <div class="ad-banner">광고 배너 영역</div>
+            <div class="action-buttons">
+                <button class="action-btn save-btn" onclick="saveAsImage()">이미지 저장</button>
+                <button class="action-btn share-btn" onclick="shareKakao()">카톡 공유</button>
+            </div>
+            <div class="other-tests">
+                <h3>다른 테스트도 해볼래?</h3>
+                <div class="test-item" onclick="location.href='love-test.html'">
+                    <div class="test-item-title">너 연애에서 호구력 몇 %?</div>
+                    <div class="test-item-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
+                </div>
+                <div class="test-item" onclick="location.href='work-test.html'">
+                    <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
+                    <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
+                </div>
+                <div class="test-item" onclick="location.href='relationship-test.html'">
+                    <div class="test-item-title">너 인간관계에서 얼마나 밀림?</div>
+                    <div class="test-item-desc">사람들한테 만만하게 보이는 정도 측정</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const testData = {
+            questions: [
+                { question: "아침에 눈 뜨자마자 하는 행동은?", answers: { A: "씻고 준비함", B: "폰 들고 SNS 확인" }},
+                { question: "하루에 SNS 확인 횟수는?", answers: { A: "5회 미만", B: "셀 수도 없이 많음" }},
+                { question: "화장실 갈 때 폰은?", answers: { A: "안 가져감", B: "무조건 들고 감" }},
+                { question: "게시물 올리고 나서 반응 확인하는 빈도는?", answers: { A: "한두 번 보고 끝", B: "5분마다 확인" }},
+                { question: "친구랑 밥 먹을 때", answers: { A: "대화에 집중", B: "중간중간 폰 봄" }},
+                { question: "잠들기 전 마지막 행동은?", answers: { A: "폰 멀리 두고 잠", B: "SNS 보다가 잠듦" }},
+                { question: "폰 배터리 20% 남았을 때 불안감은?", answers: { A: "별로 안 불안함", B: "급하게 충전기 찾음" }},
+                { question: "하루 스크린 타임은?", answers: { A: "3시간 미만", B: "5시간 이상" }},
+                { question: "알림 오면", answers: { A: "나중에 확인", B: "바로 확인함" }},
+                { question: "폰 없이 하루 버틸 수 있음?", answers: { A: "가능함", B: "절대 불가능" }}
+            ],
+            results: [
+                { range: [0, 20], title: "디지털 디톡스 성공형", summary: "SNS 중독 위험 거의 없음", message: "넌 SNS에 인생 안 빼앗기는 타입. 필요할 때만 보고, 알림에 흔들리지 않고, 오프라인 삶을 더 중요하게 여김. 이 정도면 건강한 디지털 라이프 유지하고 있음. 요즘 보기 드문 사람임 ㅋㅋ" },
+                { range: [21, 40], title: "적당히 사용하는 편", summary: "SNS 중독 위험 낮음", message: "SNS는 하지만 중독 수준은 아님. 필요할 때 보고, 끌 때는 확실히 끄고, 오프라인 활동도 잘하는 스타일. 이 정도면 건강한 균형 유지하고 있음. 계속 이 밸런스 유지하면 됨." },
+                { range: [41, 60], title: "슬슬 위험 신호", summary: "SNS 중독 위험 중간", message: "생각보다 SNS에 시간 많이 쓰고 있음. 폰 없으면 약간 불안하고, 알림 오면 바로 확인하고, 자기 전에 SNS 보는 게 습관처럼 됨. 아직 심각한 건 아니지만 조금씩 줄여나가는 게 좋음." },
+                { range: [61, 80], title: "중독 레벨 근접", summary: "SNS 중독 위험 높음", message: "솔직히 말하면 SNS 중독 수준에 가까움. 하루 종일 폰 보고, 알림에 민감하고, 폰 없으면 불안함. 이대로 가면 일상생활, 인간관계, 집중력에 문제 생길 수 있음. 스크린 타임 좀 줄여봐." },
+                { range: [81, 100], title: "완전 중독 상태", summary: "SNS 중독 위험 최상위권", message: "거의 확정으로 SNS 중독임 ㅋㅋㅋ 눈 뜨면 폰, 자기 전에도 폰, 밥 먹을 때도 폰. 이 정도면 진짜 생활에 지장 있을 수 있음. 디지털 디톡스 진지하게 고민해봐. 폰 좀 내려놔." }
+            ]
+        };
+        let currentQuestion = 0, score = 0;
+        window.addEventListener('DOMContentLoaded', function() {
+            const countUp = new CountUp('participantCount', 19637 + Math.floor(Math.random() * 100), { duration: 2, separator: ',' });
+            countUp.start();
+        });
+        function startTest() { document.getElementById('startScreen').style.display = 'none'; document.getElementById('questionScreen').style.display = 'block'; showQuestion(0); }
+        function showQuestion(index) {
+            const q = testData.questions[index];
+            document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('answerA').textContent = q.answers.A;
+            document.getElementById('answerB').textContent = q.answers.B;
+            document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
+        }
+        function selectAnswer(answer) { if (answer === 'B') score += 10; currentQuestion++; currentQuestion < testData.questions.length ? showQuestion(currentQuestion) : showResult(); }
+        function showResult() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            document.getElementById('resultPercentage').textContent = score + '%';
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultSummary').textContent = result.summary;
+            document.getElementById('resultMessage').textContent = result.message;
+        }
+        function saveAsImage() { html2canvas(document.getElementById('resultCard'), { scale: 2, backgroundColor: null }).then(canvas => { const link = document.createElement('a'); link.download = 'SNS중독_위험도_결과.png'; link.href = canvas.toDataURL(); link.click(); }); }
+        function shareKakao() { alert('카카오톡 공유 기능은 카카오 개발자 등록 후 사용 가능합니다.\n지금은 URL 복사로 대체됩니다.'); navigator.clipboard.writeText(window.location.href).then(() => alert('URL이 복사되었습니다!')); }
+    </script>
+</body>
+</html>
