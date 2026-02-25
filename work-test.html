@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>너 회사에서 욕먹을 확률 몇 %?</title>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="너 회사에서 욕먹을 확률 몇 %?">
+    <meta property="og:description" content="동료들 단톡방에서 네 얘기 나올 확률 측정">
+    <meta property="og:image" content="https://via.placeholder.com/800x400?text=욕먹을+확률+테스트">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2.5px solid #ec4899;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .start-screen { padding: 60px 40px; text-align: center; }
+        .start-screen h1 { font-size: 28px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; text-shadow: 0 3px 10px rgba(0,0,0,0.5); font-weight: bold; }
+        .start-screen p { font-size: 16px; color: #fce7f3; margin-bottom: 40px; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .participant-count {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ec4899;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #fce7f3;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .participant-count strong { font-size: 24px; color: #fbbf24; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .start-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: 2.5px solid #ec4899;
+            padding: 18px 60px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .start-btn:hover { transform: scale(1.05); border-color: #f472b6; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        .question-screen { display: none; padding: 40px; }
+        .progress-bar { height: 8px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; margin-bottom: 30px; overflow: hidden; border: 1px solid rgba(236, 72, 153, 0.3); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%); width: 0%; transition: width 0.3s; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .question-number { font-size: 14px; color: #fbcfe8; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); font-weight: 600; }
+        .question-text { font-size: 22px; color: #ffffff; margin-bottom: 40px; line-height: 1.5; font-weight: bold; text-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+        .answer-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(10px);
+            border: 2.5px solid #ec4899;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.5;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .answer-btn:hover { border: 3px solid #f472b6; background: rgba(236, 72, 153, 0.3); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .result-screen { display: none; padding: 40px; }
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(236, 72, 153, 0.5);
+        }
+        .result-percentage { font-size: 72px; color: #fbbf24; font-weight: bold; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .result-title { font-size: 24px; color: white; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .result-summary { font-size: 16px; color: #fce7f3; margin-bottom: 20px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .result-message { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; color: white; line-height: 1.6; font-size: 15px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 1px solid rgba(236, 72, 153, 0.3); }
+        .ad-banner { display: none; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .action-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .save-btn { background: #10b981; color: white; }
+        .share-btn { background: #fbbf24; color: #1f2937; }
+        .action-btn:hover { transform: scale(1.05); }
+        .other-tests {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(236, 72, 153, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .other-tests h3 { font-size: 18px; margin-bottom: 20px; color: #ffffff; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .test-item {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid rgba(236, 72, 153, 0.5);
+        }
+        .test-item:hover { transform: translateX(5px); border-color: #f472b6; background: rgba(244, 114, 182, 0.3); }
+        .test-item-title { font-size: 16px; font-weight: bold; color: #ffffff; margin-bottom: 5px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .test-item-desc { font-size: 14px; color: #fce7f3; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <h1>너 회사에서 욕먹을 확률 몇 %?</h1>
+            <p>동료들 단톡방에서 네 얘기 나올 확률 측정</p>
+            <div class="participant-count">지금까지 <strong id="participantCount">0</strong>명이 참여했어요</div>
+            <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="question-number" id="questionNumber">질문 1/10</div>
+            <div class="question-text" id="questionText"></div>
+            <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
+            <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
+        </div>
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card" id="resultCard">
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn save-btn" onclick="saveAsImage()">이미지 저장</button>
+                <button class="action-btn share-btn" onclick="shareKakao()">카톡 공유</button>
+            </div>
+            <div class="other-tests">
+                <h3>다른 테스트도 해볼래?</h3>
+                <div class="test-item" onclick="location.href='love-test.html'">
+                    <div class="test-item-title">너 연애에서 호구력 몇 %?</div>
+                    <div class="test-item-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
+                </div>
+                <div class="test-item" onclick="location.href='relationship-test.html'">
+                    <div class="test-item-title">너 인간관계에서 얼마나 밀림?</div>
+                    <div class="test-item-desc">사람들한테 만만하게 보이는 정도 측정</div>
+                </div>
+                <div class="test-item" onclick="location.href='spending-test.html'">
+                    <div class="test-item-title">너 충동소비 지수 몇 %?</div>
+                    <div class="test-item-desc">카드 긁을 때 이성 잃는 정도 측정</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const testData = {
+            questions: [
+                { question: "\"누가 이거 해줄 사람?\" 🙋", answers: { A: "눈 피함", B: "제가요 (선수침)" }},
+                { question: "퇴근 직전에 급건 ⏰", answers: { A: "아... 내일 아침에요?", B: "네... (야근 각)" }},
+                { question: "팀 회식 🍻", answers: { A: "거의 안 감", B: "웬만하면 다 참석" }},
+                { question: "옆자리 \"이거 좀만 봐줄래?\" 👀", answers: { A: "나 지금 바빠서...", B: "어 그래 보여줘" }},
+                { question: "밤 11시 슬랙/카톡 업무 📱", answers: { A: "다음날 확인", B: "바로 답장" }},
+                { question: "팀플에서 네 역할 💼", answers: { A: "최소한만 하고 조용", B: "적극적으로 의견" }},
+                { question: "점심 메뉴 정할 때 🍽️", answers: { A: "아무거나요~", B: "저는 ㅇㅇ 어때요?" }},
+                { question: "실수로 업무 놓쳤을 때 😰", answers: { A: "조용히 혼자 해결", B: "바로 공유하고 도움 요청" }},
+                { question: "단톡방에서 💬", answers: { A: "수고요~", B: "수고하셨습니다" }},
+                { question: "휴가 쓸 때 ✈️", answers: { A: "필요하면 그냥 씀", B: "팀 상황 보고 조율" }}
+            ],
+            results: [
+                { range: [0, 20], title: "💼 회사의 모범생", summary: "욕먹을 확률 거의 없음", message: "동료들이 널 싫어할 이유가 없음. 적극적이고 협조적이고 눈치도 있음. 오히려 팀에서 좋은 평가 받는 중." },
+                { range: [21, 40], title: "✨ 무난한 직장인", summary: "욕먹을 확률 낮음", message: "딱 평균. 해야 할 건 하고 피할 건 피하는 스타일. 누가 널 좋아하진 않지만 싫어하지도 않음. 조용히 월급 받기 좋은 포지션." },
+                { range: [41, 60], title: "🤔 약간 눈총 받는 중", summary: "욕먹을 확률 중간", message: "동료 단톡에서 가끔 네 얘기 나올 수도 있는 레벨. 적극성 부족하거나 협업할 때 좀 불편한 구석 있을 수 있음." },
+                { range: [61, 80], title: "😬 동료들이 속으로 불편해함", summary: "욕먹을 확률 높음", message: "솔직히 팀원들이 너랑 일하는 거 좀 불편해할 가능성 높음. 업무 회피, 소통 안 됨, 눈치 없는 행동 잦음. 태도 점검 필요." },
+                { range: [81, 94], title: "🚨 팀의 공공의 적", summary: "욕먹을 확률 상위권", message: "거의 확정 뒷담화 1순위ㅋㅋ 일 안 하고 소통 안 되고 회피만 하면 동료들이 널 좋게 볼 리 없음. 회사 생활 힘들어질 듯." },
+                { range: [95, 100], title: "⚠️ 이직 추천 레벨", summary: "욕먹을 확률 극한", message: "100점 만점에 100점 찍었네ㅋㅋㅋ 이 정도면 진짜 답 없음. 동료들이 너 보면 한숨 나올 듯. 지금 회사 계속 다닐 거면 태도 180도 바꾸든가, 아니면 이직 준비해." }
+            ]
+        };
+        let currentQuestion = 0, score = 0;
+        window.addEventListener('DOMContentLoaded', function() {
+            const countUp = new CountUp('participantCount', 18532 + Math.floor(Math.random() * 50), { duration: 2, separator: ',' });
+            countUp.start();
+        });
+        function startTest() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            showQuestion(0);
+        }
+        function showQuestion(index) {
+            const q = testData.questions[index];
+            document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('answerA').textContent = q.answers.A;
+            document.getElementById('answerB').textContent = q.answers.B;
+            document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
+        }
+        function selectAnswer(answer) {
+            if (answer === 'A') score += 10;
+            currentQuestion++;
+            currentQuestion < testData.questions.length ? showQuestion(currentQuestion) : showResult();
+        }
+        function showResult() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            document.getElementById('resultPercentage').textContent = score + '%';
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultSummary').textContent = result.summary;
+            document.getElementById('resultMessage').textContent = result.message;
+        }
+        function saveAsImage() {
+            html2canvas(document.getElementById('resultCard'), { scale: 2, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '회사_욕먹을확률_결과.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+        function shareKakao() {
+            alert('카카오톡 공유 기능은 카카오 개발자 등록 후 사용 가능합니다.\n지금은 URL 복사로 대체됩니다.');
+            navigator.clipboard.writeText(window.location.href).then(() => alert('URL이 복사되었습니다!'));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>너 인간관계에서 얼마나 밀림?</title>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="너 인간관계에서 얼마나 밀림?">
+    <meta property="og:description" content="사람들한테 만만하게 보이는 정도 측정">
+    <meta property="og:image" content="https://via.placeholder.com/800x400?text=인간관계+밀림+테스트">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2.5px solid #0ea5e9;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .start-screen { padding: 60px 40px; text-align: center; }
+        .start-screen h1 { font-size: 28px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; text-shadow: 0 3px 10px rgba(0,0,0,0.5); font-weight: bold; }
+        .start-screen p { font-size: 16px; color: #e0f2fe; margin-bottom: 40px; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .participant-count {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 2px solid #0ea5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #e0f2fe;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .participant-count strong { font-size: 24px; color: #fbbf24; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        .start-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: 2.5px solid #0ea5e9;
+            padding: 18px 60px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .start-btn:hover { transform: scale(1.05); border-color: #38bdf8; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        .question-screen { display: none; padding: 40px; }
+        .progress-bar { height: 8px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; margin-bottom: 30px; overflow: hidden; border: 1px solid rgba(14, 165, 233, 0.3); }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%); width: 0%; transition: width 0.3s; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .question-number { font-size: 14px; color: #bae6fd; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); font-weight: 600; }
+        .question-text { font-size: 22px; color: #ffffff; margin-bottom: 40px; line-height: 1.5; font-weight: bold; text-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+        .answer-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(10px);
+            border: 2.5px solid #0ea5e9;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.5;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+        .answer-btn:hover { border: 3px solid #38bdf8; background: rgba(14, 165, 233, 0.3); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .result-screen { display: none; padding: 40px; }
+        .result-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid rgba(14, 165, 233, 0.5);
+        }
+        .result-percentage { font-size: 72px; color: #fbbf24; font-weight: bold; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .result-title { font-size: 24px; color: white; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .result-summary { font-size: 16px; color: #e0f2fe; margin-bottom: 20px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .result-message { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; color: white; line-height: 1.6; font-size: 15px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 1px solid rgba(14, 165, 233, 0.3); }
+        .ad-banner { display: none; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .action-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
+        .save-btn { background: #10b981; color: white; }
+        .share-btn { background: #fbbf24; color: #1f2937; }
+        .action-btn:hover { transform: scale(1.05); }
+        .other-tests {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(14, 165, 233, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .other-tests h3 { font-size: 18px; margin-bottom: 20px; color: #ffffff; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .test-item {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid rgba(14, 165, 233, 0.5);
+        }
+        .test-item:hover { transform: translateX(5px); border-color: #38bdf8; background: rgba(56, 189, 248, 0.3); }
+        .test-item-title { font-size: 16px; font-weight: bold; color: #ffffff; margin-bottom: 5px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .test-item-desc { font-size: 14px; color: #e0f2fe; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <h1>너 인간관계에서 얼마나 밀림?</h1>
+            <p>사람들한테 만만하게 보이는 정도 측정</p>
+            <div class="participant-count">지금까지 <strong id="participantCount">0</strong>명이 참여했어요</div>
+            <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
+        </div>
+        <div class="question-screen" id="questionScreen">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="question-number" id="questionNumber">질문 1/10</div>
+            <div class="question-text" id="questionText"></div>
+            <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
+            <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
+        </div>
+        <div class="result-screen" id="resultScreen">
+            <div class="result-card" id="resultCard">
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
+                <div class="result-message" id="resultMessage"></div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn save-btn" onclick="saveAsImage()">이미지 저장</button>
+                <button class="action-btn share-btn" onclick="shareKakao()">카톡 공유</button>
+            </div>
+            <div class="other-tests">
+                <h3>다른 테스트도 해볼래?</h3>
+                <div class="test-item" onclick="location.href='love-test.html'">
+                    <div class="test-item-title">너 연애에서 호구력 몇 %?</div>
+                    <div class="test-item-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
+                </div>
+                <div class="test-item" onclick="location.href='work-test.html'">
+                    <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
+                    <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
+                </div>
+                <div class="test-item" onclick="location.href='spending-test.html'">
+                    <div class="test-item-title">너 충동소비 지수 몇 %?</div>
+                    <div class="test-item-desc">카드 긁을 때 이성 잃는 정도 측정</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const testData = {
+            questions: [
+                { question: "약속 30분 떡상 ⏰", answers: { A: "괜찮아~ 기다림", B: "야 30분이나 늦었네?" }},
+                { question: "단톡에서 말했는데 읽씹 👻", answers: { A: "그냥 넘김", B: "야 나 말 안 봤어?" }},
+                { question: "카페 갔는데 내 자리 뺏김 ☕", answers: { A: "아... 저기요 제 자린데...", B: "야 거기 내 자리야" }},
+                { question: "음식 잘못 나옴 🍽️", answers: { A: "그냥 먹음", B: "저기요 이거 제가 시킨 거 아니에요" }},
+                { question: "친구가 나한테는 텅텅 비우고 🙅", answers: { A: "들어줌", B: "야 너 내 부탁은 왜 안 들어주냐" }},
+                { question: "단체 주문 내가 싫은 메뉴로 결정 🍕", answers: { A: "아 저는 괜찮아요~", B: "어 근데 나 그거 별로인데" }},
+                { question: "대화 중 계속 끼어드는 사람 💬", answers: { A: "말 멈추고 양보", B: "어 잠깐만 내가 지금 얘기 중" }},
+                { question: "내 물건 허락 없이 쓰는 중 📱", answers: { A: "쓰고 싶었나보네...", B: "야 그거 내 건데 물어보지" }},
+                { question: "친구가 약속 일방 취소 ❌", answers: { A: "응 알았어", B: "야 나 준비 다 했는데" }},
+                { question: "단톡에서 내 의견 무시 😶", answers: { A: "따라가기로 함", B: "어 근데 나는 이렇게 생각하는데?" }}
+            ],
+            results: [
+                { range: [0, 20], title: "💪 절대 안 밀리는 사람", summary: "밀림 지수 거의 없음", message: "넌 사람들한테 절대 만만하게 안 보이는 타입. 할 말 하고 선 넘으면 바로 지적함. 오히려 상대가 너 눈치 봄." },
+                { range: [21, 40], title: "✨ 적당히 주고받는 편", summary: "밀림 지수 낮음", message: "기본적으론 안 밀리지만 상황 봐서 양보도 할 줄 아는 사람. 내 선은 지키되 관계 유지도 중요하게 생각하는 스타일." },
+                { range: [41, 60], title: "🤔 은근 밀리고 있음", summary: "밀림 지수 중간", message: "불편해도 말 못 하고 참는 경우 좀 있음. 사람들이 슬쩍슬쩍 너한테 부담 떠넘기거나 무시하는 순간 있을 수 있음." },
+                { range: [61, 80], title: "😬 꽤 만만하게 보임", summary: "밀림 지수 높음", message: "솔직히 주변 사람들이 널 좀 만만하게 볼 가능성 높음. 거절 못 하고 양보만 하면 사람들이 그걸 당연하게 여김." },
+                { range: [81, 94], title: "💔 완전 호구 취급당하는 중", summary: "밀림 지수 상위권", message: "거의 확정으로 이용당하는 중ㅋㅋ 부탁 다 들어주고 불편한 것도 참기만 하면 사람들이 너 우습게 봄. 관계 정리 필요." },
+                { range: [95, 100], title: "⚠️ 세상에서 제일 착한 호구", summary: "밀림 지수 극한", message: "역대급이다 진짜ㅋㅋㅋ 이 정도면 너 인생이 남 좋은 일만 시키는 거 아님? 지금 주변 사람들 싹 다 정리하고 새로 시작해. 네가 소중한 사람이란 걸 기억해." }
+            ]
+        };
+        let currentQuestion = 0, score = 0;
+        window.addEventListener('DOMContentLoaded', function() {
+            const countUp = new CountUp('participantCount', 16821 + Math.floor(Math.random() * 50), { duration: 2, separator: ',' });
+            countUp.start();
+        });
+        function startTest() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            showQuestion(0);
+        }
+        function showQuestion(index) {
+            const q = testData.questions[index];
+            document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('answerA').textContent = q.answers.A;
+            document.getElementById('answerB').textContent = q.answers.B;
+            document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
+        }
+        function selectAnswer(answer) {
+            if (answer === 'A') score += 10;
+            currentQuestion++;
+            currentQuestion < testData.questions.length ? showQuestion(currentQuestion) : showResult();
+        }
+        function showResult() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            document.getElementById('resultPercentage').textContent = score + '%';
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultSummary').textContent = result.summary;
+            document.getElementById('resultMessage').textContent = result.message;
+        }
+        function saveAsImage() {
+            html2canvas(document.getElementById('resultCard'), { scale: 2, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '인간관계_밀림_결과.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+        function shareKakao() {
+            alert('카카오톡 공유 기능은 카카오 개발자 등록 후 사용 가능합니다.\n지금은 URL 복사로 대체됩니다.');
+            navigator.clipboard.writeText(window.location.href).then(() => alert('URL이 복사되었습니다!'));
+        }
+    </script>
+</body>
+</html>
