@@ -52,18 +52,23 @@
         .start-screen { padding: 60px 40px; text-align: center; }
         .start-screen h1 { font-size: 28px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; text-shadow: 0 3px 10px rgba(0,0,0,0.5); font-weight: bold; }
         .start-screen p { font-size: 16px; color: #e0f2fe; margin-bottom: 40px; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .participant-count {
+        .test-info {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            border: 2px solid #0ea5e9;
-            padding: 15px;
+            border: 2px solid currentColor;
+            padding: 12px 20px;
             border-radius: 10px;
             margin-bottom: 30px;
-            font-size: 14px;
-            color: #e0f2fe;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.95);
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            font-weight: 500;
         }
-        .participant-count strong { font-size: 24px; color: #fbbf24; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+        
+        .test-category { font-weight: 600; }
+        .test-divider { opacity: 0.5; margin: 0 8px; }
+        .test-time { }
+        
         .start-btn {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
@@ -148,7 +153,7 @@
         <div class="start-screen" id="startScreen">
             <h1>너 인간관계에서 얼마나 밀림?</h1>
             <p>사람들한테 만만하게 보이는 정도 측정</p>
-            <div class="participant-count">지금까지 <strong id="participantCount">0</strong>명이 참여했어요</div>
+            <div class="test-info"><span class="test-category">👥 인간관계</span> <span class="test-divider">|</span> <span class="test-time">⏱️ 약 1분</span></div>
             <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
         </div>
         <div class="question-screen" id="questionScreen">
@@ -216,8 +221,7 @@
             return nickname ? nickname + '야' : '너';
         }
         window.addEventListener('DOMContentLoaded', function() {
-            const countUp = new CountUp('participantCount', 16821 + Math.floor(Math.random() * 50), { duration: 2, separator: ',' });
-            countUp.start();
+            
         });
         function startTest() {
             document.getElementById('startScreen').style.display = 'none';
