@@ -331,11 +331,11 @@
     <script>
         const testData = {
             questions: [
-                { question: "오늘 진짜 피곤하다고? 💤", answers: { A: "알았어 쉬어", B: "야 무슨 일인데" }},
+                { question: "{nickname}, 상대가 오늘 진짜 피곤하다고 하면? 💤", answers: { A: "알았어 쉬어", B: "야 무슨 일인데" }},
                 { question: "약속 당일 갑자기 취소 ❌", answers: { A: "ㅇㅋ 괜찮아~", B: "나 옷 다 갈아입었는데??" }},
                 { question: "전 애인 얘기 또 꺼냄 😒", answers: { A: "그냥 들어줌", B: "야 그만 좀 해라" }},
                 { question: "읽씹 5시간째 👻", answers: { A: "바쁘겠지 기다림", B: "?? 왜 안 봐" }},
-                { question: "또 친구 약속 우선함 🎉", answers: { A: "그래 재밌게 놀다 와", B: "어 우리 언제 봄?" }},
+                { question: "{nickname}, 또 친구 약속 우선하면 어떻게 할래? 🎉", answers: { A: "그래 재밌게 놀다 와", B: "어 우리 언제 봄?" }},
                 { question: "싸우고 사과 없이 일상 톡 💬", answers: { A: "그냥 답장함", B: "야 우리 싸웠잖아" }},
                 { question: "데이트값 또 내가 계산 💳", answers: { A: "내가 내고 싶어서", B: "오늘은 너 낼래?" }},
                 { question: "우리 연락 좀 줄이자 🥶", answers: { A: "응 알았어...", B: "갑자기 왜? 나 때문?" }},
@@ -343,17 +343,24 @@
                 { question: "SNS에 다른 이성이랑 사진 👀", answers: { A: "친구겠지...", B: "야 저 사람 누구야?" }}
             ],
             results: [
-                { range: [0, 20], title: "💪 너는 연애 프로급 자존감", summary: "호구력 거의 제로", message: "당하고 사는 거 진심 싫어하는 타입. 상대가 선 넘으면 바로 말함. 오히려 상대가 너 눈치 보는 수준ㅋㅋ" },
-                { range: [21, 40], title: "👍 어느 정도 선은 지키는 편", summary: "호구력 낮음", message: "기본적으론 안 당하고 살지만 애정 가면 좀 봐줄 수도 있는 사람. 선 넘으면 확실히 표현하는 스타일." },
-                { range: [41, 60], title: "😅 애매하게 당하는 중", summary: "호구력 중간", message: "불편한 건 있는데 말 못 하는 타입. \"이번만...\" 하다가 계속 참게 됨. 상대가 슬쩍 이용할 여지 남겨둠." },
-                { range: [61, 80], title: "😢 사랑 앞에서 너무 착함", summary: "호구력 높음", message: "진심으로 좋아하면 다 참아주는 타입. 약속 취소해도 연락 안 해도 \"바쁜가보네\" 하고 넘어감. 너 감정도 중요함." },
-                { range: [81, 94], title: "😭 완벽한 연애 호구", summary: "호구력 상위권", message: "축하함 너 호구 맞음ㅋㅋ 뭘 해도 \"괜찮아\" 하면서 받아줌. 이러다 진짜 이용만 당하고 버려질 수 있음. 자존감 좀 챙겨." },
-                { range: [95, 100], title: "🚨 레전드급 연애 호구", summary: "호구력 극한", message: "이 정도 점수 처음 봄ㅋㅋㅋ 너 자신이 소중하다는 걸 진짜 모르는 듯. 상대가 아무리 막 대해도 다 받아줌? 지금 당장 관계 다시 봐. 너 소중해." }
+                { range: [0, 20], title: "💪 {nickname}는 연애 프로급 자존감", summary: "호구력 거의 제로", message: "당하고 사는 거 진심 싫어하는 타입. 상대가 선 넘으면 바로 말함. 오히려 상대가 너 눈치 보는 수준ㅋㅋ" },
+                { range: [21, 40], title: "👍 {nickname}는 어느 정도 선은 지키는 편", summary: "호구력 낮음", message: "기본적으론 안 당하고 살지만 애정 가면 좀 봐줄 수도 있는 사람. 선 넘으면 확실히 표현하는 스타일." },
+                { range: [41, 60], title: "😅 {nickname}는 애매하게 당하는 중", summary: "호구력 중간", message: "불편한 건 있는데 말 못 하는 타입. \"이번만...\" 하다가 계속 참게 됨. 상대가 슬쩍 이용할 여지 남겨둠." },
+                { range: [61, 80], title: "😢 {nickname}는 사랑 앞에서 너무 착함", summary: "호구력 높음", message: "진심으로 좋아하면 다 참아주는 타입. 약속 취소해도 연락 안 해도 \"바쁜가보네\" 하고 넘어감. 너 감정도 중요함." },
+                { range: [81, 94], title: "😭 {nickname}는 완벽한 연애 호구", summary: "호구력 상위권", message: "축하함 너 호구 맞음ㅋㅋ 뭘 해도 \"괜찮아\" 하면서 받아줌. 이러다 진짜 이용만 당하고 버려질 수 있음. 자존감 좀 챙겨." },
+                { range: [95, 100], title: "🚨 {nickname}는 레전드급 연애 호구", summary: "호구력 극한", message: "이 정도 점수 처음 봄ㅋㅋㅋ 너 자신이 소중하다는 걸 진짜 모르는 듯. 상대가 아무리 막 대해도 다 받아줌? 지금 당장 관계 다시 봐. 너 소중해." }
             ]
         };
         
         let currentQuestion = 0, score = 0;
         
+        // 닉네임 가져오기
+        function getNickname() {
+            const nickname = localStorage.getItem('testNickname');
+            return nickname ? nickname + '야' : '너';
+        }
+        
+        // 페이지 로드 시 참여자 수 카운트업
         window.addEventListener('DOMContentLoaded', function() {
             const countUp = new CountUp('participantCount', 15247 + Math.floor(Math.random() * 50), { duration: 2, separator: ',' });
             countUp.start();
@@ -367,8 +374,10 @@
         
         function showQuestion(index) {
             const q = testData.questions[index];
+            const nickname = getNickname();
+            
             document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
-            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionText').textContent = q.question.replace('{nickname}', nickname);
             document.getElementById('answerA').textContent = q.answers.A;
             document.getElementById('answerB').textContent = q.answers.B;
             document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
@@ -383,9 +392,12 @@
         function showResult() {
             document.getElementById('questionScreen').style.display = 'none';
             document.getElementById('resultScreen').style.display = 'block';
+            
+            const nickname = localStorage.getItem('testNickname') || '너';
             const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            
             document.getElementById('resultPercentage').textContent = score + '%';
-            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultTitle').textContent = result.title.replace('{nickname}', nickname);
             document.getElementById('resultSummary').textContent = result.summary;
             document.getElementById('resultMessage').textContent = result.message;
         }

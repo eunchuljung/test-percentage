@@ -186,10 +186,145 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* 닉네임 입력 화면 */
+        .hidden { display: none !important; }
+        
+        .nickname-screen {
+            padding: 80px 40px;
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .nickname-screen h1 {
+            font-size: 36px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-shadow: 0 3px 15px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+        
+        .nickname-screen p {
+            font-size: 18px;
+            color: #e9d5ff;
+            margin-bottom: 50px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .nickname-input-wrapper { margin-bottom: 40px; }
+        
+        #nicknameInput {
+            width: 100%;
+            max-width: 350px;
+            padding: 18px 25px;
+            font-size: 20px;
+            border: 3px solid #8b5cf6;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1f2937;
+            text-align: center;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        #nicknameInput:focus {
+            border-color: #a78bfa;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.2);
+            transform: scale(1.02);
+        }
+        
+        #nicknameInput::placeholder { color: #9ca3af; font-weight: 400; }
+        
+        .nickname-hint {
+            font-size: 14px;
+            color: #c4b5fd;
+            margin-top: 12px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .nickname-screen .start-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            border: none;
+            padding: 20px 80px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            margin: 0 auto;
+        }
+        
+        .nickname-screen .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .nickname-screen .start-btn:not(:disabled):hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
+        }
     </style>
 </head>
 <body>
+    <script>
+        // 닉네임 확인 및 화면 전환
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedNickname = localStorage.getItem('testNickname');
+            
+            if (savedNickname) {
+                // 이미 닉네임이 있으면 바로 메인 화면
+                document.getElementById('nicknameScreen').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+            }
+            
+            // 닉네임 입력 활성화
+            const input = document.getElementById('nicknameInput');
+            const btn = document.getElementById('nicknameBtn');
+            
+            if (input && btn) {
+                input.addEventListener('input', function() {
+                    btn.disabled = this.value.trim().length === 0;
+                });
+                
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && this.value.trim().length > 0) {
+                        saveNickname();
+                    }
+                });
+            }
+        });
+        
+        // 닉네임 저장
+        function saveNickname() {
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            if (nickname.length === 0) return;
+            
+            localStorage.setItem('testNickname', nickname);
+            document.getElementById('nicknameScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+        }
+    </script>
     <div class="container">
+        <!-- 닉네임 입력 화면 -->
+        <div class="nickname-screen" id="nicknameScreen">
+            <h1>🎯 심리 테스트</h1>
+            <p>시작하기 전에 닉네임을 입력해줘</p>
+            <div class="nickname-input-wrapper">
+                <input type="text" id="nicknameInput" placeholder="닉네임 입력 (최대 8자)" maxlength="8" autocomplete="off">
+                <p class="nickname-hint">모든 테스트에서 사용돼요</p>
+            </div>
+            <button class="start-btn" onclick="saveNickname()" id="nicknameBtn" disabled>시작하기</button>
+        </div>
+        
+        <!-- 메인 테스트 목록 -->
+        <div class="main-content hidden" id="mainContent">
         <div class="header">
             <h1>너 몇 %? 🔥</h1>
             <p>가볍게 긁히고, 공유하고 싶어지는 심리 테스트</p>
