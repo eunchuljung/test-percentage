@@ -210,6 +210,11 @@
             ]
         };
         let currentQuestion = 0, score = 0;
+        
+        function getNickname() {
+            const nickname = localStorage.getItem('testNickname');
+            return nickname ? nickname + '야' : '너';
+        }
         window.addEventListener('DOMContentLoaded', function() {
             const countUp = new CountUp('participantCount', 19637 + Math.floor(Math.random() * 50), { duration: 2, separator: ',' });
             countUp.start();
@@ -221,8 +226,10 @@
         }
         function showQuestion(index) {
             const q = testData.questions[index];
+            const nickname = getNickname();
+            
             document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
-            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionText').textContent = q.question.replace(/{nickname}/g, nickname);
             document.getElementById('answerA').textContent = q.answers.A;
             document.getElementById('answerB').textContent = q.answers.B;
             document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
@@ -235,9 +242,12 @@
         function showResult() {
             document.getElementById('questionScreen').style.display = 'none';
             document.getElementById('resultScreen').style.display = 'block';
+            
+            const nickname = localStorage.getItem('testNickname') || '너';
             const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
+            
             document.getElementById('resultPercentage').textContent = score + '%';
-            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultTitle').textContent = result.title.replace(/{nickname}/g, nickname);
             document.getElementById('resultSummary').textContent = result.summary;
             document.getElementById('resultMessage').textContent = result.message;
         }
