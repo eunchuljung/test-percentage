@@ -4,378 +4,404 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>너 몇 %? - 자극적인 심리 테스트</title>
-    
+
     <!-- OG 태그 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="너 몇 %? - 자극적인 심리 테스트">
     <meta property="og:description" content="연애, 직장, 인간관계 등 다양한 테스트로 나를 측정해보세요">
-    <meta property="og:image" content="https://via.placeholder.com/1200x630?text=너+몇+%?">
     <meta property="og:url" content="">
-    
+
+    <!-- Pretendard 폰트 -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ── 전역 리셋 & 변수 ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #FFFFFF;
+            --neo-black: #1B1B1B;
+            --baby-lilac: #E4D2FF;
+            --ice-mint: #D2F8E5;
+            --candy-peach: #FFB3AB;
+            --radius-card: 20px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.14);
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background: var(--bg);
             min-height: 100vh;
-            padding: 20px;
-            position: relative;
+            color: var(--neo-black);
         }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* 헤더 */
-        .header {
-            text-align: center;
-            padding: 60px 20px 40px;
-            color: white;
-        }
-        
-        .header h1 {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-        
-        /* 테스트 그리드 */
-        .test-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-        
-        .test-card {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid rgba(167, 139, 250, 0.6);
-            border-radius: 20px;
-            padding: 35px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .test-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%);
-        }
-        
-        .test-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            border-color: rgba(196, 181, 253, 0.8);
-        }
-        
-        /* 각 테스트별 색상 */
-        .test-card:nth-child(1)::before { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
-        .test-card:nth-child(2)::before { background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%); }
-        .test-card:nth-child(3)::before { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); }
-        .test-card:nth-child(4)::before { background: linear-gradient(90deg, #fa709a 0%, #fee140 100%); }
-        .test-card:nth-child(5)::before { background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); }
-        
-        .test-emoji {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-        
-        .test-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 12px;
-            line-height: 1.3;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .test-desc {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .test-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .test-meta {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        /* 푸터 */
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: white;
-            opacity: 0.8;
-        }
-        
-        .footer p {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 36px;
-            }
-            
-            .test-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* 닉네임 입력 화면 */
+
         .hidden { display: none !important; }
-        
-        .nickname-screen {
-            padding: 80px 40px;
-            text-align: center;
-            min-height: 500px;
+
+        /* ── 닉네임 화면 ── */
+        #nicknameScreen {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-        }
-        
-        .nickname-screen h1 {
-            font-size: 36px;
-            color: #ffffff;
-            margin-bottom: 20px;
-            text-shadow: 0 3px 15px rgba(0,0,0,0.5);
-            font-weight: bold;
-        }
-        
-        .nickname-screen p {
-            font-size: 18px;
-            color: #e9d5ff;
-            margin-bottom: 50px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        .nickname-input-wrapper { margin-bottom: 40px; }
-        
-        #nicknameInput {
-            width: 100%;
-            max-width: 350px;
-            padding: 18px 25px;
-            font-size: 20px;
-            border: 3px solid #8b5cf6;
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #1f2937;
+            align-items: center;
+            padding: 40px 24px;
             text-align: center;
+            background: var(--neo-black); /* 닉네임 화면은 다크 */
+        }
+
+        .nick-badge {
+            display: inline-block;
+            background: var(--baby-lilac);
+            color: var(--neo-black);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+        }
+
+        #nicknameScreen h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        #nicknameScreen p {
+            font-size: 16px;
+            color: rgba(255,255,255,0.55);
+            margin-bottom: 40px;
+        }
+
+        /* 입력창 */
+        #nicknameInput {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            padding: 16px 20px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 18px;
             font-weight: 600;
+            text-align: center;
+            background: rgba(255,255,255,0.07);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: #fff;
             outline: none;
-            transition: all 0.3s;
+            transition: border-color 0.2s, background 0.2s;
+            margin-bottom: 12px;
         }
-        
+
+        #nicknameInput::placeholder { color: rgba(255,255,255,0.3); font-weight: 400; }
+
         #nicknameInput:focus {
-            border-color: #a78bfa;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.2);
-            transform: scale(1.02);
+            border-color: var(--baby-lilac);
+            background: rgba(255,255,255,0.1);
         }
-        
-        #nicknameInput::placeholder { color: #9ca3af; font-weight: 400; }
-        
-        .nickname-hint {
-            font-size: 14px;
-            color: #c4b5fd;
-            margin-top: 12px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+
+        .nick-hint {
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 32px;
         }
-        
-        .nickname-screen .start-btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            color: white;
+
+        /* 시작 버튼 */
+        .nick-btn {
+            width: 100%;
+            max-width: 320px;
+            padding: 17px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--neo-black);
+            background: var(--baby-lilac);
             border: none;
-            padding: 20px 80px;
-            font-size: 20px;
-            border-radius: 50px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-            margin: 0 auto;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
         }
-        
-        .nickname-screen .start-btn:disabled {
-            opacity: 0.5;
+
+        .nick-btn:disabled {
+            opacity: 0.3;
             cursor: not-allowed;
         }
-        
-        .nickname-screen .start-btn:not(:disabled):hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
+
+        .nick-btn:not(:disabled):hover {
+            transform: scale(0.98);
+            box-shadow: 0 6px 24px rgba(228,210,255,0.4);
+        }
+
+        /* ── 메인 컨텐츠 ── */
+        #mainContent {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 0 0 60px;
+        }
+
+        /* 헤더 */
+        .header {
+            padding: 52px 24px 32px;
+        }
+
+        .header-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: rgba(27,27,27,0.4);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1.2;
+            color: var(--neo-black);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: rgba(27,27,27,0.5);
+            line-height: 1.6;
+        }
+
+        /* 테스트 카드 목록 */
+        .test-list {
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* 카드 공통 */
+        .test-card {
+            border-radius: var(--radius-card);
+            padding: 28px 24px;
+            cursor: pointer;
+            transition: transform 0.18s, box-shadow 0.18s;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .test-card:hover {
+            transform: scale(0.98);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* 카드별 컬러 — UI 가이드 5색 */
+        .card-peach   { background: var(--candy-peach); }   /* 연애 */
+        .card-black   { background: var(--neo-black); }      /* 직장 */
+        .card-lilac   { background: var(--baby-lilac); }     /* 인간관계 */
+        .card-mint    { background: var(--ice-mint); }       /* 소비 */
+        .card-lilac2  { background: var(--baby-lilac); }     /* SNS — 살짝 다른 배치 */
+
+        /* 카드 텍스트 색상 (밝은 배경) */
+        .card-peach .card-title,
+        .card-peach .card-meta,
+        .card-lilac .card-title,
+        .card-lilac .card-meta,
+        .card-mint .card-title,
+        .card-mint .card-meta,
+        .card-lilac2 .card-title,
+        .card-lilac2 .card-meta {
+            color: var(--neo-black);
+        }
+
+        /* 카드 텍스트 색상 (어두운 배경) */
+        .card-black .card-title { color: #fff; }
+        .card-black .card-meta  { color: rgba(255,255,255,0.5); }
+
+        .card-emoji {
+            font-size: 36px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.6;
+            margin-bottom: 20px;
+        }
+
+        .card-black .card-desc { color: rgba(255,255,255,0.5); }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(27,27,27,0.1);
+        }
+
+        .card-black .card-footer { border-top-color: rgba(255,255,255,0.1); }
+
+        .card-meta {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* 화살표 아이콘 */
+        .card-arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(27,27,27,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .card-black .card-arrow {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* 푸터 */
+        .footer {
+            text-align: center;
+            padding: 40px 24px 0;
+        }
+
+        .footer p {
+            font-size: 13px;
+            color: rgba(27,27,27,0.3);
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-    <script>
-        // 닉네임 확인 및 화면 전환
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedNickname = localStorage.getItem('testNickname');
-            
-            if (savedNickname) {
-                // 이미 닉네임이 있으면 바로 메인 화면
-                document.getElementById('nicknameScreen').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-            }
-            
-            // 닉네임 입력 활성화
-            const input = document.getElementById('nicknameInput');
-            const btn = document.getElementById('nicknameBtn');
-            
-            if (input && btn) {
-                input.addEventListener('input', function() {
-                    btn.disabled = this.value.trim().length === 0;
-                });
-                
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && this.value.trim().length > 0) {
-                        saveNickname();
-                    }
-                });
-            }
-        });
-        
-        // 닉네임 저장
-        function saveNickname() {
-            const nickname = document.getElementById('nicknameInput').value.trim();
-            if (nickname.length === 0) return;
-            
-            localStorage.setItem('testNickname', nickname);
+
+<script>
+    // 닉네임 저장 여부 확인 → 화면 분기
+    document.addEventListener('DOMContentLoaded', function () {
+        const saved = localStorage.getItem('testNickname');
+        if (saved) {
             document.getElementById('nicknameScreen').classList.add('hidden');
             document.getElementById('mainContent').classList.remove('hidden');
         }
-    </script>
-    <div class="container">
-        <!-- 닉네임 입력 화면 -->
-        <div class="nickname-screen" id="nicknameScreen">
-            <h1>🎯 심리 테스트</h1>
-            <p>시작하기 전에 닉네임을 입력해줘</p>
-            <div class="nickname-input-wrapper">
-                <input type="text" id="nicknameInput" placeholder="닉네임 입력 (최대 8자)" maxlength="8" autocomplete="off">
-                <p class="nickname-hint">모든 테스트에서 사용돼요</p>
-            </div>
-            <button class="start-btn" onclick="saveNickname()" id="nicknameBtn" disabled>시작하기</button>
-        </div>
-        
-        <!-- 메인 테스트 목록 -->
-        <div class="main-content hidden" id="mainContent">
-        <div class="header">
-            <h1>너 몇 %? 🔥</h1>
-            <p>가볍게 긁히고, 공유하고 싶어지는 심리 테스트</p>
-        </div>
-        
-        <div class="test-grid">
-            <!-- 연애 호구력 -->
-            <div class="test-card" onclick="location.href='love-test.html'">
-                <div class="test-emoji">💔</div>
-                <div class="test-title">너 연애에서 호구력 몇 %?</div>
-                <div class="test-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
-                <div class="test-stats">
-                    <div class="test-meta">💘 연애</div>
-                    <div class="test-meta">⏱️ 1분</div>
-                </div>
-            </div>
-            
-            <!-- 직장 욕먹을 확률 -->
-            <div class="test-card" onclick="location.href='work-test.html'">
-                <div class="test-emoji">💼</div>
-                <div class="test-title">너 회사에서 욕먹을 확률 몇 %?</div>
-                <div class="test-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
-                <div class="test-stats">
-                    <div class="test-meta">💼 직장</div>
-                    <div class="test-meta">⏱️ 1분</div>
-                </div>
-            </div>
-            
-            <!-- 인간관계 밀림 -->
-            <div class="test-card" onclick="location.href='relationship-test.html'">
-                <div class="test-emoji">👥</div>
-                <div class="test-title">너 친구들한테 호구력 몇 %?</div>
-                <div class="test-desc">사람들한테 만만하게 보이는 정도 측정</div>
-                <div class="test-stats">
-                    <div class="test-meta">👥 인간관계</div>
-                    <div class="test-meta">⏱️ 1분</div>
-                </div>
-            </div>
-            
-            <!-- 충동소비 지수 -->
-            <div class="test-card" onclick="location.href='spending-test.html'">
-                <div class="test-emoji">💳</div>
-                <div class="test-title">너 충동소비 지수 몇 %?</div>
-                <div class="test-desc">카드 긁을 때 이성 잃는 정도 측정</div>
-                <div class="test-stats">
-                    <div class="test-meta">💳 소비</div>
-                    <div class="test-meta">⏱️ 1분</div>
-                </div>
-            </div>
-            
-            <!-- SNS 중독 -->
-            <div class="test-card" onclick="location.href='sns-test.html'">
-                <div class="test-emoji">📱</div>
-                <div class="test-title">너 SNS 중독 위험도 몇 %?</div>
-                <div class="test-desc">폰 없으면 불안해지는 정도 측정</div>
-                <div class="test-stats">
-                    <div class="test-meta">📱 디지털</div>
-                    <div class="test-meta">⏱️ 1분</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2025 너 몇 %? All rights reserved.</p>
-            <p>Made with Claude 🤖</p>
-        </div>
+
+        const input = document.getElementById('nicknameInput');
+        const btn   = document.getElementById('nicknameBtn');
+
+        input.addEventListener('input', function () {
+            btn.disabled = this.value.trim().length === 0;
+        });
+
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && this.value.trim()) saveNickname();
+        });
+    });
+
+    // 닉네임 저장 후 메인 화면으로
+    function saveNickname() {
+        const val = document.getElementById('nicknameInput').value.trim();
+        if (!val) return;
+        localStorage.setItem('testNickname', val);
+        document.getElementById('nicknameScreen').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('hidden');
+    }
+</script>
+
+<!-- ① 닉네임 입력 화면 -->
+<div id="nicknameScreen">
+    <span class="nick-badge">🎯 심리 테스트</span>
+    <h1>나는 몇 %일까?</h1>
+    <p>테스트 전에 닉네임 먼저 입력해</p>
+    <input type="text" id="nicknameInput" placeholder="닉네임 (최대 8자)" maxlength="8" autocomplete="off">
+    <p class="nick-hint">모든 테스트에서 사용돼요</p>
+    <button class="nick-btn" id="nicknameBtn" onclick="saveNickname()" disabled>시작하기 →</button>
+</div>
+
+<!-- ② 메인 테스트 목록 -->
+<div id="mainContent" class="hidden">
+    <div class="header">
+        <span class="header-tag">Self Check</span>
+        <h1>너 몇 % 야? 🔥</h1>
+        <p>가볍게 긁히고, 공유하고 싶어지는<br>심리 테스트</p>
     </div>
+
+    <div class="test-list">
+
+        <!-- 연애 호구력 — Candy Peach -->
+        <a class="test-card card-peach" href="love-test.html">
+            <span class="card-emoji">💔</span>
+            <div class="card-title">너 연애에서 호구력 몇 %?</div>
+            <div class="card-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
+            <div class="card-footer">
+                <span class="card-meta">💘 연애 · 1분</span>
+                <span class="card-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 직장 욕먹을 확률 — Neo Black -->
+        <a class="test-card card-black" href="work-test.html">
+            <span class="card-emoji">💼</span>
+            <div class="card-title">너 회사에서 욕먹을 확률 몇 %?</div>
+            <div class="card-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
+            <div class="card-footer">
+                <span class="card-meta">💼 직장 · 1분</span>
+                <span class="card-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 인간관계 호구력 — Baby Lilac -->
+        <a class="test-card card-lilac" href="relationship-test.html">
+            <span class="card-emoji">👥</span>
+            <div class="card-title">너 친구들한테 호구력 몇 %?</div>
+            <div class="card-desc">사람들한테 만만하게 보이는 정도 측정</div>
+            <div class="card-footer">
+                <span class="card-meta">👥 인간관계 · 1분</span>
+                <span class="card-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 충동소비 — Ice Mint -->
+        <a class="test-card card-mint" href="spending-test.html">
+            <span class="card-emoji">💳</span>
+            <div class="card-title">너 충동소비 지수 몇 %?</div>
+            <div class="card-desc">카드 긁을 때 이성 잃는 정도 측정</div>
+            <div class="card-footer">
+                <span class="card-meta">💳 소비 · 1분</span>
+                <span class="card-arrow">→</span>
+            </div>
+        </a>
+
+        <!-- SNS 중독 — Baby Lilac 변형 -->
+        <a class="test-card card-lilac2" href="sns-test.html">
+            <span class="card-emoji">📱</span>
+            <div class="card-title">너 SNS 중독 위험도 몇 %?</div>
+            <div class="card-desc">폰 없으면 불안해지는 정도 측정</div>
+            <div class="card-footer">
+                <span class="card-meta">📱 디지털 · 1분</span>
+                <span class="card-arrow">→</span>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        <p>© 2025 너 몇 %? All rights reserved.</p>
+        <p>Made with Claude 🤖</p>
+    </div>
+</div>
+
 </body>
 </html>

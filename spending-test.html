@@ -4,330 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>너 충동소비 지수 몇 %?</title>
-    
-    <meta property="og:type" content="website">
     <meta property="og:title" content="너 충동소비 지수 몇 %?">
     <meta property="og:description" content="카드 긁을 때 이성 잃는 정도 측정">
-    <meta property="og:image" content="https://via.placeholder.com/800x400?text=충동소비+테스트">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.min.js"></script>
-    
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 2.5px solid #fb923c;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-        .start-screen { padding: 60px 40px; text-align: center; }
-        .start-screen h1 { font-size: 28px; color: #ffffff; margin-bottom: 20px; line-height: 1.4; text-shadow: 0 3px 10px rgba(0,0,0,0.5); font-weight: bold; }
-        .start-screen p { font-size: 16px; color: #fef3c7; margin-bottom: 40px; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .test-info {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 2px solid currentColor;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            font-weight: 500;
-        }
-        
-        .test-category { font-weight: 600; }
-        .test-divider { opacity: 0.5; margin: 0 8px; }
-        .test-time { }
-        
-        .start-btn {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            color: white;
-            border: 2.5px solid #fb923c;
-            padding: 18px 60px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        .start-btn:hover { transform: scale(1.05); border-color: #fdba74; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
-        .question-screen { display: none; padding: 40px; }
-        .progress-bar { height: 8px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; margin-bottom: 30px; overflow: hidden; border: 1px solid rgba(251, 146, 60, 0.3); }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%); width: 0%; transition: width 0.3s; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-        .question-number { font-size: 14px; color: #fed7aa; margin-bottom: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); font-weight: 600; }
-        .question-text { font-size: 22px; color: #ffffff; margin-bottom: 40px; line-height: 1.5; font-weight: bold; text-shadow: 0 3px 10px rgba(0,0,0,0.5); }
-        .answer-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(10px);
-            border: 2.5px solid #fb923c;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            line-height: 1.5;
-            color: #ffffff;
-            font-weight: 600;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-        }
-        .answer-btn:hover { border: 3px solid #fdba74; background: rgba(251, 146, 60, 0.3); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .result-screen { display: none; padding: 40px; }
-        .result-card {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 2px solid rgba(251, 146, 60, 0.5);
-        }
-        
-        .result-emoji {
-            font-size: 120px;
-            margin-bottom: 20px;
-            line-height: 1;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes heartbreak {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            25% { transform: scale(0.95) rotate(-3deg); }
-            50% { transform: scale(1.05) rotate(3deg); }
-            75% { transform: scale(0.98) rotate(-2deg); }
-        }
-        @keyframes warning {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-            75% { transform: rotate(-10deg); }
-            100% { transform: rotate(0deg); }
-        }
-        
-        .emoji-pulse { animation: pulse 1.5s ease-in-out infinite; }
-        .emoji-sparkle { animation: sparkle 2s ease-in-out infinite; }
-        .emoji-shake { animation: shake 0.8s ease-in-out infinite; }
-        .emoji-bounce { animation: bounce 1s ease-in-out infinite; }
-        .emoji-heartbreak { animation: heartbreak 1.2s ease-in-out infinite; }
-        .emoji-warning { animation: warning 0.6s ease-in-out infinite; }
-        
-        .result-percentage {
-        }
-        .result-percentage { font-size: 72px; color: #fbbf24; font-weight: bold; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .result-title { font-size: 24px; color: white; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .result-summary { font-size: 16px; color: #fef3c7; margin-bottom: 20px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .result-message { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; color: white; line-height: 1.6; font-size: 15px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 1px solid rgba(251, 146, 60, 0.3); }
-        .ad-banner { display: none; }
-        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .action-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: transform 0.2s; font-weight: bold; }
-        .save-btn { background: #10b981; color: white; }
-        .share-btn { background: #fbbf24; color: #1f2937; }
-        .action-btn:hover { transform: scale(1.05); }
-        .other-tests {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(251, 146, 60, 0.4);
-            padding: 30px;
-            border-radius: 15px;
-        }
-        .other-tests h3 { font-size: 18px; margin-bottom: 20px; color: #ffffff; font-weight: bold; text-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .test-item {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid rgba(251, 146, 60, 0.5);
-        }
-        .test-item:hover { transform: translateX(5px); border-color: #fdba74; background: rgba(253, 186, 116, 0.3); }
-        .test-item-title { font-size: 16px; font-weight: bold; color: #ffffff; margin-bottom: 5px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .test-item-desc { font-size: 14px; color: #fef3c7; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root { --accent:#D2F8E5; --black:#1B1B1B; --white:#FFFFFF; --gray:rgba(27,27,27,0.45); --bg:#FFFFFF; }
+        body { font-family:'Pretendard',-apple-system,sans-serif; background:var(--bg); min-height:100vh; display:flex; justify-content:center; align-items:flex-start; padding:0 0 60px; }
+        .container { width:100%; max-width:420px; min-height:100vh; }
+        .color-bar { height:6px; background:var(--accent); }
+        .start-screen { padding:48px 24px 40px; text-align:center; }
+        .start-badge { display:inline-block; background:var(--accent); color:var(--black); font-size:13px; font-weight:700; padding:6px 14px; border-radius:100px; margin-bottom:28px; }
+        .start-screen h1 { font-size:28px; font-weight:900; color:var(--black); line-height:1.3; margin-bottom:14px; }
+        .start-screen p { font-size:15px; color:var(--gray); line-height:1.7; margin-bottom:40px; }
+        .start-btn { display:block; width:100%; padding:18px; background:var(--black); color:var(--white); border:none; border-radius:14px; font-family:'Pretendard',sans-serif; font-size:16px; font-weight:700; cursor:pointer; transition:transform 0.15s; }
+        .start-btn:hover { transform:scale(0.98); }
+        .question-screen { display:none; padding:32px 24px; }
+        .progress-wrap { margin-bottom:32px; }
+        .progress-label { display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:var(--gray); margin-bottom:10px; }
+        .progress-bar { height:6px; background:rgba(27,27,27,0.08); border-radius:100px; overflow:hidden; }
+        .progress-fill { height:100%; background:var(--accent); width:0%; transition:width 0.3s; border-radius:100px; }
+        .question-text { font-size:22px; font-weight:800; color:var(--black); line-height:1.45; margin-bottom:36px; }
+        .answer-btn { width:100%; background:var(--white); border:2px solid rgba(27,27,27,0.1); padding:18px 20px; margin-bottom:12px; border-radius:14px; font-family:'Pretendard',sans-serif; font-size:16px; font-weight:600; color:var(--black); text-align:left; line-height:1.5; cursor:pointer; transition:border-color 0.15s,background 0.15s,transform 0.1s; }
+        .answer-btn:hover { border-color:var(--accent); background:#EEFFF6; transform:scale(0.99); }
+        .result-screen { display:none; }
+        .result-hero { background:var(--accent); padding:52px 24px 40px; text-align:center; }
+        .result-emoji { font-size:72px; display:block; margin-bottom:20px; line-height:1; }
+        .result-percentage { font-size:80px; font-weight:900; color:var(--black); line-height:1; margin-bottom:8px; letter-spacing:-2px; }
+        .result-title { font-size:20px; font-weight:800; color:var(--black); margin-bottom:6px; line-height:1.3; }
+        .result-summary { font-size:14px; font-weight:600; color:rgba(27,27,27,0.55); }
+        .result-body { padding:28px 24px; }
+        .result-message { background:rgba(27,27,27,0.04); border-radius:16px; padding:20px; font-size:15px; color:var(--black); line-height:1.75; margin-bottom:24px; }
+        .action-buttons { display:flex; gap:10px; margin-bottom:32px; }
+        .action-btn { flex:1; padding:15px; border:none; border-radius:12px; font-family:'Pretendard',sans-serif; font-size:14px; font-weight:700; cursor:pointer; transition:transform 0.15s; }
+        .action-btn:hover { transform:scale(0.97); }
+        .save-btn { background:rgba(27,27,27,0.06); color:var(--black); }
+        .share-btn { background:var(--black); color:var(--white); }
+        .other-tests h3 { font-size:16px; font-weight:800; color:var(--black); margin-bottom:14px; }
+        .test-item { border:2px solid rgba(27,27,27,0.08); border-radius:14px; padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s,transform 0.1s; display:flex; justify-content:space-between; align-items:center; }
+        .test-item:hover { border-color:var(--accent); transform:scale(0.99); }
+        .test-item-title { font-size:14px; font-weight:700; color:var(--black); margin-bottom:3px; }
+        .test-item-desc { font-size:13px; color:var(--gray); }
+        .test-item-arrow { font-size:16px; color:var(--gray); flex-shrink:0; margin-left:10px; }
+        .home-btn { display:block; text-align:center; padding:14px; border:2px solid rgba(27,27,27,0.1); border-radius:12px; font-size:14px; font-weight:600; color:var(--gray); text-decoration:none; margin-top:16px; }
+        .home-btn:hover { border-color:var(--black); color:var(--black); }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+        @keyframes shake { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .anim-pulse { animation:pulse 1.5s ease-in-out infinite; }
+        .anim-shake { animation:shake 0.8s ease-in-out infinite; }
+        .anim-bounce { animation:bounce 1.0s ease-in-out infinite; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .fade-in { animation:fadeIn 0.3s ease; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="start-screen" id="startScreen">
-            <h1>너 충동소비 지수 몇 %?</h1>
-            <p>카드 긁을 때 이성 잃는 정도 측정</p>
-            <div class="test-info"><span class="test-category">💳 소비</span> <span class="test-divider">|</span> <span class="test-time">⏱️ 약 1분</span></div>
-            <button class="start-btn" onclick="startTest()">테스트 시작하기</button>
-        </div>
-        <div class="question-screen" id="questionScreen">
+<div class="container">
+    <div class="color-bar"></div>
+    <div class="start-screen" id="startScreen">
+        <span class="start-badge">💳 소비</span>
+        <h1>너 충동소비 지수<br>몇 %?</h1>
+        <p>카드 긁을 때 이성 잃는<br>정도 측정</p>
+        <button class="start-btn" onclick="startTest()">테스트 시작하기 →</button>
+    </div>
+    <div class="question-screen" id="questionScreen">
+        <div class="progress-wrap">
+            <div class="progress-label"><span id="questionNumber">질문 1 / 10</span><span id="progressPct">10%</span></div>
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="question-number" id="questionNumber">질문 1/10</div>
-            <div class="question-text" id="questionText"></div>
-            <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
-            <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
         </div>
-        <div class="result-screen" id="resultScreen">
-            <div class="result-card" id="resultCard">
-                <div class="result-emoji" id="resultEmoji"></div>
-                <div class="result-percentage" id="resultPercentage">0%</div>
-                <div class="result-title" id="resultTitle"></div>
-                <div class="result-summary" id="resultSummary"></div>
-                <div class="result-message" id="resultMessage"></div>
-            </div>
+        <div class="question-text" id="questionText"></div>
+        <button class="answer-btn" id="answerA" onclick="selectAnswer('A')"></button>
+        <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
+    </div>
+    <div class="result-screen" id="resultScreen">
+        <div class="result-hero" id="resultHero">
+            <span class="result-emoji" id="resultEmoji"></span>
+            <div class="result-percentage" id="resultPercentage">0%</div>
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-summary" id="resultSummary"></div>
+        </div>
+        <div class="result-body">
+            <div class="result-message" id="resultMessage"></div>
             <div class="action-buttons">
-                <button class="action-btn save-btn" onclick="saveAsImage()">이미지 저장</button>
-                <button class="action-btn share-btn" onclick="shareKakao()">카톡 공유</button>
+                <button class="action-btn save-btn" onclick="saveAsImage()">📷 이미지 저장</button>
+                <button class="action-btn share-btn" onclick="shareLink()">🔗 공유하기</button>
             </div>
             <div class="other-tests">
                 <h3>다른 테스트도 해볼래?</h3>
-                <div class="test-item" onclick="location.href='love-test.html'">
-                    <div class="test-item-title">너 연애에서 호구력 몇 %?</div>
-                    <div class="test-item-desc">사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄</div>
-                </div>
-                <div class="test-item" onclick="location.href='work-test.html'">
-                    <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
-                    <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률 측정</div>
-                </div>
-                <div class="test-item" onclick="location.href='sns-test.html'">
-                    <div class="test-item-title">너 SNS 중독 위험도 몇 %?</div>
-                    <div class="test-item-desc">폰 없으면 불안해지는 정도 측정</div>
-                </div>
+                <div class="test-item" onclick="location.href='love-test.html'"><div class="test-item-info"><div class="test-item-title">너 연애에서 호구력 몇 %?</div><div class="test-item-desc">사랑 앞에서 당하고만 사는 정도</div></div><span class="test-item-arrow">→</span></div>
+                <div class="test-item" onclick="location.href='work-test.html'"><div class="test-item-info"><div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div><div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률</div></div><span class="test-item-arrow">→</span></div>
+                <div class="test-item" onclick="location.href='sns-test.html'"><div class="test-item-info"><div class="test-item-title">너 SNS 중독 위험도 몇 %?</div><div class="test-item-desc">폰 없으면 불안해지는 정도</div></div><span class="test-item-arrow">→</span></div>
             </div>
+            <a href="index.html" class="home-btn">← 전체 테스트 보러 가기</a>
         </div>
     </div>
-    <script>
-        const testData = {
-            questions: [
-                { question: "{nickname}, 배달앱 켜면 보통 어떻게 해? 🛵", answers: { A: "정한 메뉴 바로 주문", B: "30분 동안 메뉴 고르다 추가" }},
-                { question: "세일 딱지 보이면 🏷️", answers: { A: "필요하면 삼", B: "일단 담음" }},
-                { question: "장바구니에만 담아둠? 🛒", answers: { A: "80% (구경만)", B: "거의 다 결제" }},
-                { question: "무료배송 N원 남음 📦", answers: { A: "그냥 배송비 냄", B: "뭐라도 더 담아서 맞춤" }},
-                { question: "{nickname}, 월급날이면 어떻게 해? 💰", answers: { A: "고정 지출 빼고 저축", B: "갖고 싶었던 거 바로 결제" }},
-                { question: "친구 \"이거 샀어~\" 👀", answers: { A: "오 좋겠다~", B: "어디서? 나도 살까?" }},
-                { question: "새벽 3시 무신사/당근 뒤적 🌙", answers: { A: "내일 사야지", B: "지금 안 사면 품절될듯" }},
-                { question: "리뷰 보고 충동 구매 ⭐", answers: { A: "거의 없음", B: "한 달에 1번 이상" }},
-                { question: "할인 끝나는 3초 카운트다운 ⏱️", answers: { A: "마케팅이네 (무시)", B: "심장 뛴다 (급하게 결제)" }},
-                { question: "카드값 나왔을 때 💳", answers: { A: "예상 범위 내", B: "어? 이렇게나...?" }}
-            ],
-            results: [
-                { range: [0, 20], title: "💪 {nickname}는 소비 철인", summary: "충동소비 거의 안 함", message: "넌 계획적이고 이성적으로 돈 쓰는 타입. 필요한 것만 사고 할인에도 안 흔들림. 재테크 잘하고 있을 듯." },
-                { range: [21, 40], title: "✨ {nickname}는 적당히 절제하는 편", summary: "충동소비 낮음", message: "기본적으론 계획적으로 쓰지만 가끔 하고 싶은 거 있으면 사는 스타일. 큰 낭비는 안 하는 편. 밸런스 괜찮음." },
-                { range: [41, 60], title: "🤔 {nickname}는 가끔 이성 잃음", summary: "충동소비 중간", message: "계획은 있는데 지키기 어려운 타입. 할인, 이벤트, 리뷰에 은근 흔들림. 카드값 나왔을 때 \"어?\" 하는 순간 있음." },
-                { range: [61, 80], title: "💸 {nickname}는 카드 긁는 머신", summary: "충동소비 높음", message: "솔직히 충동 구매 꽤 많이 하는 편. 보면 사고 싶고 할인하면 일단 사고 새벽에 결제 누름. 통장 잔고 위험할 듯." },
-                { range: [81, 94], title: "🚨 {nickname}는 찐 충동소비러", summary: "충동소비 상위권", message: "거의 확정으로 카드값 폭탄 맞는 중ㅋㅋ 사고 싶으면 바로 사고 할인 보면 무조건 사고. 진짜 빚 조심해야 함." },
-                { range: [95, 100], title: "⚠️ {nickname}는 신용불량 예약자", summary: "충동소비 극한", message: "만점 찍은 거 축하함ㅋㅋㅋ 이 정도면 통장 잔고 마이너스 아님? 보이는 거 다 사고 카드 돌려막기 하는 거 아니야? 지금 당장 카드 가위로 잘라. 진짜로." }
-            ]
-        };
-        let currentQuestion = 0, score = 0;
-        
-        function getNickname() {
-            const nickname = localStorage.getItem('testNickname');
-            return nickname ? nickname + '야' : '너';
-        }
-        window.addEventListener('DOMContentLoaded', function() {
-            
-        });
-        function startTest() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('questionScreen').style.display = 'block';
-            showQuestion(0);
-        }
-        function showQuestion(index) {
-            const q = testData.questions[index];
-            const nickname = getNickname();
-            
-            document.getElementById('questionNumber').textContent = `질문 ${index + 1}/10`;
-            document.getElementById('questionText').textContent = q.question.replace(/{nickname}/g, nickname);
-            document.getElementById('answerA').textContent = q.answers.A;
-            document.getElementById('answerB').textContent = q.answers.B;
-            document.getElementById('progressFill').style.width = ((index + 1) / 10) * 100 + '%';
-        }
-        function selectAnswer(answer) {
-            if (answer === 'B') score += 10;
-            currentQuestion++;
-            currentQuestion < testData.questions.length ? showQuestion(currentQuestion) : showResult();
-        }
-        function showResult() {
-            document.getElementById('questionScreen').style.display = 'none';
-            document.getElementById('resultScreen').style.display = 'block';
-            
-            const nickname = localStorage.getItem('testNickname') || '너';
-            const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
-            
-            const emojiMatch = result.title.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u);
-            const emoji = emojiMatch ? emojiMatch[0] : '💯';
-            
-            let animationClass = '';
-            if (score <= 20) animationClass = 'emoji-pulse';
-            else if (score <= 40) animationClass = 'emoji-sparkle';
-            else if (score <= 60) animationClass = 'emoji-shake';
-            else if (score <= 80) animationClass = 'emoji-bounce';
-            else if (score <= 94) animationClass = 'emoji-heartbreak';
-            else animationClass = 'emoji-warning';
-            
-            document.getElementById('resultEmoji').textContent = emoji;
-            document.getElementById('resultEmoji').className = 'result-emoji ' + animationClass;
-            document.getElementById('resultPercentage').textContent = score + '%';
-            document.getElementById('resultTitle').textContent = result.title.replace(/{nickname}/g, nickname);
-            document.getElementById('resultSummary').textContent = result.summary;
-            document.getElementById('resultMessage').textContent = result.message;
-        }
-        function saveAsImage() {
-            html2canvas(document.getElementById('resultCard'), { scale: 2, backgroundColor: null }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = '충동소비_지수_결과.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
-        function shareKakao() {
-            alert('카카오톡 공유 기능은 카카오 개발자 등록 후 사용 가능합니다.\n지금은 URL 복사로 대체됩니다.');
-            navigator.clipboard.writeText(window.location.href).then(() => alert('URL이 복사되었습니다!'));
-        }
-    </script>
+</div>
+<script>
+    const testData = {
+        questions: [
+            {question:"{nickname}, 배달앱 켜면 보통 어떻게 해? 🛵",answers:{A:"정한 메뉴 바로 주문",B:"30분 동안 메뉴 고르다 추가"}},
+            {question:"세일 딱지 보이면 🏷️",answers:{A:"필요하면 삼",B:"일단 담음"}},
+            {question:"장바구니에만 담아둠? 🛒",answers:{A:"80% (구경만)",B:"거의 다 결제"}},
+            {question:"무료배송 N원 남음 📦",answers:{A:"그냥 배송비 냄",B:"뭐라도 더 담아서 맞춤"}},
+            {question:"{nickname}, 월급날이면 어떻게 해? 💰",answers:{A:"고정 지출 빼고 저축",B:"갖고 싶었던 거 바로 결제"}},
+            {question:"친구 '이거 샀어~' 👀",answers:{A:"오 좋겠다~",B:"어디서? 나도 살까?"}},
+            {question:"새벽 3시 무신사/당근 뒤적 🌙",answers:{A:"내일 사야지",B:"지금 안 사면 품절될듯"}},
+            {question:"리뷰 보고 충동 구매 ⭐",answers:{A:"거의 없음",B:"한 달에 1번 이상"}},
+            {question:"할인 끝나는 3초 카운트다운 ⏱️",answers:{A:"마케팅이네 (무시)",B:"심장 뛴다 (급하게 결제)"}},
+            {question:"카드값 나왔을 때 💳",answers:{A:"예상 범위 내",B:"어? 이렇게나...?"}}
+        ],
+        results: [
+            {range:[0,20],  emoji:"💪",anim:"anim-pulse", title:"{nickname}는 소비 철인",          summary:"충동소비 거의 안 함",  message:"계획적이고 이성적으로 돈 쓰는 타입. 필요한 것만 사고 할인에도 안 흔들림."},
+            {range:[21,40], emoji:"✨",anim:"anim-pulse", title:"{nickname}는 적당히 절제하는 편",  summary:"충동소비 낮음",        message:"기본적으론 계획적으로 쓰지만 가끔 하고 싶은 거 있으면 사는 스타일. 밸런스 괜찮음."},
+            {range:[41,60], emoji:"🤔",anim:"",           title:"{nickname}는 가끔 이성 잃음",      summary:"충동소비 중간",       message:"계획은 있는데 지키기 어려운 타입. 할인, 이벤트, 리뷰에 은근 흔들림. 카드값 나왔을 때 '어?' 하는 순간 있음."},
+            {range:[61,80], emoji:"💸",anim:"anim-bounce",title:"{nickname}는 카드 긁는 머신",      summary:"충동소비 높음",       message:"솔직히 충동 구매 꽤 많이 하는 편. 보면 사고 싶고 할인하면 일단 사고. 통장 잔고 위험할 듯."},
+            {range:[81,94], emoji:"🚨",anim:"anim-shake", title:"{nickname}는 찐 충동소비러",       summary:"충동소비 상위권",     message:"거의 확정으로 카드값 폭탄 맞는 중ㅋㅋ 진짜 빚 조심해야 함."},
+            {range:[95,100],emoji:"⚠️",anim:"anim-shake", title:"{nickname}는 신용불량 예약자",     summary:"충동소비 극한",       message:"통장 잔고 마이너스 아님? 지금 당장 카드 가위로 잘라. 진짜로."}
+        ]
+    };
+    let currentQuestion=0,score=0;
+    function getNickname(){return localStorage.getItem('testNickname')||'너';}
+    function startTest(){document.getElementById('startScreen').style.display='none';document.getElementById('questionScreen').style.display='block';showQuestion(0);}
+    function showQuestion(i){
+        const q=testData.questions[i],nick=getNickname(),total=testData.questions.length,pct=Math.round(((i+1)/total)*100);
+        document.getElementById('questionNumber').textContent=`질문 ${i+1} / ${total}`;
+        document.getElementById('progressPct').textContent=pct+'%';
+        document.getElementById('progressFill').style.width=pct+'%';
+        document.getElementById('questionText').textContent=q.question.replace(/{nickname}/g,nick);
+        document.getElementById('answerA').textContent=q.answers.A;
+        document.getElementById('answerB').textContent=q.answers.B;
+        const qs=document.getElementById('questionScreen');qs.classList.remove('fade-in');void qs.offsetWidth;qs.classList.add('fade-in');
+    }
+    function selectAnswer(a){if(a==='A')score+=10;currentQuestion++;currentQuestion<testData.questions.length?showQuestion(currentQuestion):showResult();}
+    function showResult(){
+        document.getElementById('questionScreen').style.display='none';
+        const rs=document.getElementById('resultScreen');rs.style.display='block';rs.classList.add('fade-in');
+        const nick=localStorage.getItem('testNickname')||'너';
+        const r=testData.results.find(x=>score>=x.range[0]&&score<=x.range[1]);
+        document.getElementById('resultEmoji').textContent=r.emoji;
+        document.getElementById('resultEmoji').className='result-emoji '+r.anim;
+        document.getElementById('resultPercentage').textContent=score+'%';
+        document.getElementById('resultTitle').textContent=r.title.replace(/{nickname}/g,nick);
+        document.getElementById('resultSummary').textContent=r.summary;
+        document.getElementById('resultMessage').textContent=r.message;
+    }
+    function saveAsImage(){html2canvas(document.getElementById('resultHero'),{scale:2}).then(c=>{const l=document.createElement('a');l.download='충동소비_지수.png';l.href=c.toDataURL();l.click();});}
+    function shareLink(){navigator.clipboard.writeText(window.location.href).then(()=>alert('링크가 복사되었어요! 친구한테 공유해봐 👀'));}
+</script>
 </body>
 </html>
