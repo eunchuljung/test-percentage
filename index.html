@@ -203,7 +203,7 @@
         .card-black   { background: var(--neo-black); }      /* 직장 */
         .card-lilac   { background: var(--baby-lilac); }     /* 인간관계 */
         .card-mint    { background: var(--ice-mint); }       /* 소비 */
-        .card-lilac2  { background: var(--baby-lilac); }     /* SNS — 살짝 다른 배치 */
+        .card-lilac2  { background: #6A4DFF; }               /* SNS — 살짝 다른 배치 */
 
         /* 카드 텍스트 색상 (밝은 배경) */
         .card-peach .card-title,
@@ -211,15 +211,20 @@
         .card-lilac .card-title,
         .card-lilac .card-meta,
         .card-mint .card-title,
-        .card-mint .card-meta,
-        .card-lilac2 .card-title,
-        .card-lilac2 .card-meta {
+        .card-mint .card-meta {
             color: var(--neo-black);
         }
 
         /* 카드 텍스트 색상 (어두운 배경) */
         .card-black .card-title { color: #fff; }
         .card-black .card-meta  { color: rgba(255,255,255,0.5); }
+
+        /* SNS 카드 (어두운 보라색 대응) */
+        .card-lilac2 .card-title { color: #fff; }
+        .card-lilac2 .card-meta  { color: rgba(255,255,255,0.7); }
+        .card-lilac2 .card-desc  { color: rgba(255,255,255,0.6); }
+        .card-lilac2 .card-footer { border-top-color: rgba(255,255,255,0.2); }
+        .card-lilac2 .card-arrow { background: rgba(255,255,255,0.15); }
 
         .card-emoji {
             font-size: 36px;
