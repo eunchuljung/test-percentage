@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>너 회사에서 욕먹을 확률 몇 %?</title>
+
+    <!-- OG 태그 -->
+    <meta property="og:type" content="website">
     <meta property="og:title" content="너 회사에서 욕먹을 확률 몇 %?">
     <meta property="og:description" content="동료들 단톡방에서 네 얘기 나올 확률 측정">
+    <meta property="og:image" content="https://test-percentage.vercel.app/og-image.png">
+    <meta property="og:url" content="https://test-percentage.vercel.app/work-test.html">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
@@ -55,6 +61,14 @@
         .anim-pulse { animation:pulse 1.5s ease-in-out infinite; }
         .anim-shake { animation:shake 0.8s ease-in-out infinite; }
         .anim-bounce { animation:bounce 1.0s ease-in-out infinite; }
+
+        /* 페이드 전환 & 결과 진입 */
+        @keyframes resultEntrance {
+            0% { opacity: 0; transform: scale(0.9) translateY(40px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .result-entrance { animation: resultEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
         @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
         .fade-in { animation:fadeIn 0.3s ease; }
     </style>
@@ -78,25 +92,27 @@
         <button class="answer-btn" id="answerB" onclick="selectAnswer('B')"></button>
     </div>
     <div class="result-screen" id="resultScreen">
-        <div class="result-hero" id="resultHero">
-            <span class="result-emoji" id="resultEmoji"></span>
-            <div class="result-percentage" id="resultPercentage">0%</div>
-            <div class="result-title" id="resultTitle"></div>
-            <div class="result-summary" id="resultSummary"></div>
-        </div>
-        <div class="result-body">
-            <div class="result-message" id="resultMessage"></div>
-            <div class="action-buttons">
-                <button class="action-btn save-btn" onclick="saveAsImage()">📷 이미지 저장</button>
-                <button class="action-btn share-btn" onclick="shareLink()">🔗 공유하기</button>
+        <div id="resultContent">
+            <div class="result-hero" id="resultHero">
+                <span class="result-emoji" id="resultEmoji"></span>
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
             </div>
-            <div class="other-tests">
-                <h3>다른 테스트도 해볼래?</h3>
-                <div class="test-item" onclick="location.href='love-test.html'"><div class="test-item-info"><div class="test-item-title">너 연애에서 호구력 몇 %?</div><div class="test-item-desc">사랑 앞에서 당하고만 사는 정도</div></div><span class="test-item-arrow">→</span></div>
-                <div class="test-item" onclick="location.href='relationship-test.html'"><div class="test-item-info"><div class="test-item-title">너 친구들한테 호구력 몇 %?</div><div class="test-item-desc">사람들한테 만만하게 보이는 정도</div></div><span class="test-item-arrow">→</span></div>
-                <div class="test-item" onclick="location.href='spending-test.html'"><div class="test-item-info"><div class="test-item-title">너 충동소비 지수 몇 %?</div><div class="test-item-desc">카드 긁을 때 이성 잃는 정도</div></div><span class="test-item-arrow">→</span></div>
+            <div class="result-body">
+                <div class="result-message" id="resultMessage"></div>
+                <div class="action-buttons">
+                    <button class="action-btn save-btn" onclick="saveAsImage()">📷 이미지 저장</button>
+                    <button class="action-btn share-btn" onclick="shareLink()">🔗 공유하기</button>
+                </div>
+                <div class="other-tests">
+                    <h3>다른 테스트도 해볼래?</h3>
+                    <div class="test-item" onclick="location.href='love-test.html'"><div class="test-item-info"><div class="test-item-title">너 연애에서 호구력 몇 %?</div><div class="test-item-desc">사랑 앞에서 당하고만 사는 정도</div></div><span class="test-item-arrow">→</span></div>
+                    <div class="test-item" onclick="location.href='relationship-test.html'"><div class="test-item-info"><div class="test-item-title">너 친구들한테 호구력 몇 %?</div><div class="test-item-desc">사람들한테 만만하게 보이는 정도</div></div><span class="test-item-arrow">→</span></div>
+                    <div class="test-item" onclick="location.href='spending-test.html'"><div class="test-item-info"><div class="test-item-title">너 충동소비 지수 몇 %?</div><div class="test-item-desc">카드 긁을 때 이성 잃는 정도</div></div><span class="test-item-arrow">→</span></div>
+                </div>
+                <a href="index.html" class="home-btn">← 전체 테스트 보러 가기</a>
             </div>
-            <a href="index.html" class="home-btn">← 전체 테스트 보러 가기</a>
         </div>
     </div>
 </div>
@@ -119,7 +135,7 @@
             {range:[21,40], emoji:"✨",anim:"anim-pulse", title:"{nickname}는 무난한 직장인",       summary:"욕먹을 확률 낮음",        message:"딱 평균. 해야 할 건 하고 피할 건 피하는 스타일. 조용히 월급 받기 좋은 포지션."},
             {range:[41,60], emoji:"🤔",anim:"",           title:"{nickname}는 약간 눈총 받는 중",  summary:"욕먹을 확률 중간",       message:"동료 단톡에서 가끔 네 얘기 나올 수도 있는 레벨. 협업할 때 좀 불편한 구석 있을 수 있음."},
             {range:[61,80], emoji:"😬",anim:"anim-bounce",title:"{nickname}는 동료들이 불편해함",  summary:"욕먹을 확률 높음",       message:"팀원들이 너랑 일하는 거 좀 불편해할 가능성 높음. 업무 회피, 소통 안 됨, 눈치 없는 행동 잦음."},
-            {range:[81,94], emoji:"🚨",anim:"anim-shake", title:"{nickname}는 팀의 공공의 적",     summary:"욕먹을 확률 상위권",     message:"거의 확정 뒷담화 1순위ㅋㅋ 일 안 하고 소통 안 되고 회피만 하면 동료들이 널 좋게 볼 리 없음."},
+            {range:[81,94], emoji:"🚨",anim:"anim-shake", title:"{nickname}는 팀의 공공의 적",     summary:"욕먹을 확률 상위권",     message:"거의 확정으로 뒷담화 1순위ㅋㅋ 일 안 하고 소통 안 되고 회피만 하면 동료들이 널 좋게 볼 리 없음."},
             {range:[95,100],emoji:"⚠️",anim:"anim-shake", title:"{nickname}는 이직 추천 레벨",     summary:"욕먹을 확률 극한",       message:"이 정도면 진짜 답 없음. 지금 회사 계속 다닐 거면 태도 180도 바꾸든가, 아니면 이직 준비해."}
         ]
     };
@@ -140,15 +156,36 @@
     function selectAnswer(a){if(a==='A')score+=10;currentQuestion++;currentQuestion<testData.questions.length?showQuestion(currentQuestion):showResult();}
     function showResult(){
         document.getElementById('questionScreen').style.display='none';
-        const rs=document.getElementById('resultScreen'); rs.style.display='block'; rs.classList.add('fade-in');
-        const nick=localStorage.getItem('testNickname')||'너';
-        const r=testData.results.find(x=>score>=x.range[0]&&score<=x.range[1]);
-        document.getElementById('resultEmoji').textContent=r.emoji;
-        document.getElementById('resultEmoji').className='result-emoji '+r.anim;
-        document.getElementById('resultPercentage').textContent=score+'%';
-        document.getElementById('resultTitle').textContent=r.title.replace(/{nickname}/g,nick);
-        document.getElementById('resultSummary').textContent=r.summary;
-        document.getElementById('resultMessage').textContent=r.message;
+        const rs = document.getElementById('resultScreen');
+        rs.style.display = 'block';
+
+        const rc = document.getElementById('resultContent');
+        rc.classList.add('result-entrance');
+
+        const nick = getNickname();
+        const r = testData.results.find(x => score >= x.range[0] && score <= x.range[1]);
+
+        document.getElementById('resultEmoji').textContent = r.emoji;
+        document.getElementById('resultEmoji').className = 'result-emoji ' + r.anim;
+        
+        // 점수 카운트업 애니메이션
+        animateValue("resultPercentage", 0, score, 1500);
+
+        document.getElementById('resultTitle').textContent = r.title.replace(/{nickname}/g, nick);
+        document.getElementById('resultSummary').textContent = r.summary;
+        document.getElementById('resultMessage').textContent = r.message;
+    }
+    function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const val = progress === 1 ? end : Math.floor(end * (1 - Math.pow(2, -10 * progress)));
+            obj.innerHTML = val + "%";
+            if (progress < 1) window.requestAnimationFrame(step);
+        };
+        window.requestAnimationFrame(step);
     }
     function saveAsImage(){html2canvas(document.getElementById('resultHero'),{scale:2}).then(c=>{const l=document.createElement('a');l.download='회사_욕먹을확률.png';l.href=c.toDataURL();l.click();});}
     function shareLink(){navigator.clipboard.writeText(window.location.href).then(()=>alert('링크가 복사되었어요! 친구한테 공유해봐 👀'));}

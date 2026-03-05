@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>너 연애에서 호구력 몇 %?</title>
 
+    <!-- OG 태그 -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="너 연애에서 호구력 몇 %?">
     <meta property="og:description" content="사랑 앞에서 당하고만 사는 너의 호구력을 측정해봄">
-    <meta property="og:url" content="">
+    <meta property="og:image" content="https://test-percentage.vercel.app/og-image.png">
+    <meta property="og:url" content="https://test-percentage.vercel.app/love-test.html">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
@@ -333,9 +335,15 @@
         .anim-shake   { animation: shake  0.8s ease-in-out infinite; }
         .anim-bounce  { animation: bounce 1.0s ease-in-out infinite; }
 
-        /* 페이드 전환 */
+        /* 페이드 전환 & 결과 진입 */
+        @keyframes resultEntrance {
+            0% { opacity: 0; transform: scale(0.9) translateY(40px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .result-entrance { animation: resultEntrance 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
         @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-        .fade-in { animation: fadeIn 0.3s ease; }
+        .fade-in { animation: fadeIn 0.4s ease; }
     </style>
 </head>
 <body>
@@ -369,49 +377,51 @@
 
     <!-- ③ 결과 화면 -->
     <div class="result-screen" id="resultScreen">
-        <!-- 결과 히어로 영역 -->
-        <div class="result-hero" id="resultHero">
-            <span class="result-emoji" id="resultEmoji"></span>
-            <div class="result-percentage" id="resultPercentage">0%</div>
-            <div class="result-title" id="resultTitle"></div>
-            <div class="result-summary" id="resultSummary"></div>
-        </div>
-
-        <!-- 결과 본문 -->
-        <div class="result-body">
-            <div class="result-message" id="resultMessage"></div>
-
-            <div class="action-buttons">
-                <button class="action-btn save-btn" onclick="saveAsImage()">📷 이미지 저장</button>
-                <button class="action-btn share-btn" onclick="shareLink()">🔗 공유하기</button>
+        <div id="resultContent">
+            <!-- 결과 히어로 영역 -->
+            <div class="result-hero" id="resultHero">
+                <span class="result-emoji" id="resultEmoji"></span>
+                <div class="result-percentage" id="resultPercentage">0%</div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-summary" id="resultSummary"></div>
             </div>
 
-            <div class="other-tests">
-                <h3>다른 테스트도 해볼래?</h3>
-                <div class="test-item" onclick="location.href='work-test.html'">
-                    <div class="test-item-info">
-                        <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
-                        <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률</div>
-                    </div>
-                    <span class="test-item-arrow">→</span>
-                </div>
-                <div class="test-item" onclick="location.href='relationship-test.html'">
-                    <div class="test-item-info">
-                        <div class="test-item-title">너 친구들한테 호구력 몇 %?</div>
-                        <div class="test-item-desc">사람들한테 만만하게 보이는 정도</div>
-                    </div>
-                    <span class="test-item-arrow">→</span>
-                </div>
-                <div class="test-item" onclick="location.href='spending-test.html'">
-                    <div class="test-item-info">
-                        <div class="test-item-title">너 충동소비 지수 몇 %?</div>
-                        <div class="test-item-desc">카드 긁을 때 이성 잃는 정도</div>
-                    </div>
-                    <span class="test-item-arrow">→</span>
-                </div>
-            </div>
+            <!-- 결과 본문 -->
+            <div class="result-body">
+                <div class="result-message" id="resultMessage"></div>
 
-            <a href="index.html" class="home-btn">← 전체 테스트 보러 가기</a>
+                <div class="action-buttons">
+                    <button class="action-btn save-btn" onclick="saveAsImage()">📷 이미지 저장</button>
+                    <button class="action-btn share-btn" onclick="shareLink()">🔗 공유하기</button>
+                </div>
+
+                <div class="other-tests">
+                    <h3>다른 테스트도 해볼래?</h3>
+                    <div class="test-item" onclick="location.href='work-test.html'">
+                        <div class="test-item-info">
+                            <div class="test-item-title">너 회사에서 욕먹을 확률 몇 %?</div>
+                            <div class="test-item-desc">동료들 단톡방에서 네 얘기 나올 확률</div>
+                        </div>
+                        <span class="test-item-arrow">→</span>
+                    </div>
+                    <div class="test-item" onclick="location.href='relationship-test.html'">
+                        <div class="test-item-info">
+                            <div class="test-item-title">너 친구들한테 호구력 몇 %?</div>
+                            <div class="test-item-desc">사람들한테 만만하게 보이는 정도</div>
+                        </div>
+                        <span class="test-item-arrow">→</span>
+                    </div>
+                    <div class="test-item" onclick="location.href='spending-test.html'">
+                        <div class="test-item-info">
+                            <div class="test-item-title">너 충동소비 지수 몇 %?</div>
+                            <div class="test-item-desc">카드 긁을 때 이성 잃는 정도</div>
+                        </div>
+                        <span class="test-item-arrow">→</span>
+                    </div>
+                </div>
+
+                <a href="index.html" class="home-btn">← 전체 테스트 보러 가기</a>
+            </div>
         </div>
     </div>
 </div>
@@ -491,17 +501,39 @@
         document.getElementById('questionScreen').style.display = 'none';
         const rs = document.getElementById('resultScreen');
         rs.style.display = 'block';
-        rs.classList.add('fade-in');
+        
+        const rc = document.getElementById('resultContent');
+        rc.classList.add('result-entrance');
 
         const nick = getNickname();
         const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
 
         document.getElementById('resultEmoji').textContent = result.emoji;
         document.getElementById('resultEmoji').className = 'result-emoji ' + result.anim;
-        document.getElementById('resultPercentage').textContent = score + '%';
+        
+        // 점수 카운트업 애니메이션
+        animateValue("resultPercentage", 0, score, 1500);
+        
         document.getElementById('resultTitle').textContent = result.title.replace('{nickname}', nick);
         document.getElementById('resultSummary').textContent = result.summary;
         document.getElementById('resultMessage').textContent = result.message;
+    }
+
+    /* 카운트업 함수 */
+    function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            // Easing: easeOutExpo
+            const val = progress === 1 ? end : Math.floor(end * (1 - Math.pow(2, -10 * progress)));
+            obj.innerHTML = val + "%";
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
     }
 
     /* 이미지 저장 */
