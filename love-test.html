@@ -183,6 +183,51 @@
             border: 2px solid rgba(167, 139, 250, 0.5);
         }
         
+        .result-emoji {
+            font-size: 120px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+        
+        /* 애니메이션 */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes heartbreak {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(0.95) rotate(-3deg); }
+            50% { transform: scale(1.05) rotate(3deg); }
+            75% { transform: scale(0.98) rotate(-2deg); }
+        }
+        @keyframes warning {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        .emoji-pulse { animation: pulse 1.5s ease-in-out infinite; }
+        .emoji-sparkle { animation: sparkle 2s ease-in-out infinite; }
+        .emoji-shake { animation: shake 0.8s ease-in-out infinite; }
+        .emoji-bounce { animation: bounce 1s ease-in-out infinite; }
+        .emoji-heartbreak { animation: heartbreak 1.2s ease-in-out infinite; }
+        .emoji-warning { animation: warning 0.6s ease-in-out infinite; }
+        
         .result-percentage { 
             font-size: 72px; 
             color: #fbbf24; 
@@ -300,6 +345,7 @@
         
         <div class="result-screen" id="resultScreen">
             <div class="result-card" id="resultCard">
+                <div class="result-emoji" id="resultEmoji"></div>
                 <div class="result-percentage" id="resultPercentage">0%</div>
                 <div class="result-title" id="resultTitle"></div>
                 <div class="result-summary" id="resultSummary"></div>
@@ -394,6 +440,21 @@
             const nickname = localStorage.getItem('testNickname') || '너';
             const result = testData.results.find(r => score >= r.range[0] && score <= r.range[1]);
             
+            // 이모지 추출 (타이틀에서 첫 이모지 가져오기)
+            const emojiMatch = result.title.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u);
+            const emoji = emojiMatch ? emojiMatch[0] : '💯';
+            
+            // 점수별 애니메이션 클래스 결정
+            let animationClass = '';
+            if (score <= 20) animationClass = 'emoji-pulse';
+            else if (score <= 40) animationClass = 'emoji-sparkle';
+            else if (score <= 60) animationClass = 'emoji-shake';
+            else if (score <= 80) animationClass = 'emoji-bounce';
+            else if (score <= 94) animationClass = 'emoji-heartbreak';
+            else animationClass = 'emoji-warning';
+            
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultEmoji').className = 'result-emoji ' + animationClass;
             document.getElementById('resultPercentage').textContent = score + '%';
             document.getElementById('resultTitle').textContent = result.title.replace('{nickname}', nickname);
             document.getElementById('resultSummary').textContent = result.summary;
